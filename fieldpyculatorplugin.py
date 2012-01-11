@@ -2,7 +2,7 @@
 /***************************************************************************
  FieldPyculatorPlugin
                                  A QGIS plugin
- Use python for 
+ Use python power for calculate fields of vector layers  
                               -------------------
         begin                : 2012-01-07
         copyright            : (C) 2012 by Nikulin Evgeniy

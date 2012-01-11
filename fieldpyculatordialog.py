@@ -2,7 +2,7 @@
 /***************************************************************************
  FieldPyculatorPluginDialog
                                  A QGIS plugin
- Use python for 
+ Use python power for calculate fields of vector layers 
                              -------------------
         begin                : 2012-01-07
         copyright            : (C) 2012 by Nikulin Evgeniy
@@ -30,7 +30,7 @@ from ui_fieldpyculatordialog import Ui_FieldPyculatorDialog
 from syntax_highlighter import PythonHighlighter
 
 class FieldPyculatorDialog(QDialog):
-    RESULT_VAR_NAME = 'result'
+    RESULT_VAR_NAME = 'value'
         
     def __init__(self, iface):
         QDialog.__init__(self)
@@ -168,9 +168,10 @@ class FieldPyculatorDialog(QDialog):
         
         #run
         if not self.ui.chkOnlySelected.isChecked():
-            
             #select all features
-            self.ui.prgTotal.setMaximum(self.data_provider.featureCount())
+            features_for_update = self.data_provider.featureCount()
+            if  features_for_update > 0:
+                self.ui.prgTotal.setMaximum(features_for_update)
             
             feat = QgsFeature()
             if need_attrs:
@@ -234,7 +235,9 @@ class FieldPyculatorDialog(QDialog):
             
         else:
             #only selected (TODO: NEED REFACTORING - copy-past!!!)
-            self.ui.prgTotal.setMaximum(self.active_layer.selectedFeatureCount() )
+            features_for_update = self.active_layer.selectedFeatureCount()
+            if features_for_update > 0:
+                self.ui.prgTotal.setMaximum(features_for_update)
             
             for feat in self.active_layer.selectedFeatures():
                 feat_id = feat.id()
@@ -292,10 +295,18 @@ class FieldPyculatorDialog(QDialog):
                 
         
         stop = datetime.datetime.now()
+
+        #workaround for python < 2.7
+        td = stop - start;
+        if sys.version_info[:2] < (2, 7):
+            total_sec = (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
+        else:
+            total_sec = td.total_seconds()
+
         QMessageBox.information(self, self.tr("FieldPyculator code executed successfully"),
                          self.tr("Updated %1 features for %2 seconds")
-                            .arg(unicode(self.ui.prgTotal.maximum()))
-                            .arg(unicode((stop-start).total_seconds()))
+                            .arg(unicode(features_for_update))
+                            .arg(unicode(total_sec))
                          )
     
     
