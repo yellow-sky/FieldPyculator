@@ -22,7 +22,7 @@
 def name():
     return "Simple field python calculator"
 def description():
-    return "Use python for "
+    return "Use python power for calculate fields of vector layers"
 def version():
     return "Version 0.1"
 def icon():
