@@ -46,7 +46,10 @@ class FieldPyculatorDialog(QDialog):
         self.ui.lblLayerName.setText(self.active_layer.name())
         self.ui.cmbUpdateField.addItems(self.GetFieldNames(self.active_layer))
         self.ui.lstFields.addItems(self.GetFieldNames(self.active_layer))
-        self.ui.txtFieldExp.setPlainText(self.RESULT_VAR_NAME + ' = ')                                        
+        self.ui.txtFieldExp.setPlainText(self.RESULT_VAR_NAME + ' = ')          
+        
+        #setup actions
+        self.ui.btnToggleEditing.setDefaultAction(self.iface.actionToggleEditing())
         
         #setup syntax highlight
         self.highlight_field = PythonHighlighter(self.ui.txtFieldExp.document())
@@ -55,13 +58,18 @@ class FieldPyculatorDialog(QDialog):
         #setup auto focus
         self.ui.lstFields.setFocusProxy(self.ui.txtFieldExp)
         self.ui.lstValues.setFocusProxy(self.ui.txtFieldExp)
+        self.ui.btnId.setFocusProxy(self.ui.txtFieldExp)
+        self.ui.btnGeom.setFocusProxy(self.ui.txtFieldExp)
 
         #SIGNALS
         QObject.connect( self.ui.lstFields, SIGNAL( "currentItemChanged ( QListWidgetItem * , QListWidgetItem * )" ), self.UpdateFieldSampleValues)
         QObject.connect( self.ui.lstFields, SIGNAL( "itemDoubleClicked(QListWidgetItem *)" ), self.AddFieldToExpression)
         QObject.connect( self.ui.lstValues, SIGNAL( "itemDoubleClicked(QListWidgetItem *)" ), self.AddValueToExpression)
         QObject.connect( self.ui.btnGetAll, SIGNAL( " clicked()" ), self.UpdateFieldAllValues)
+        QObject.connect( self.ui.btnId, SIGNAL( " clicked()" ), self.AddIdToExplession)
+        QObject.connect( self.ui.btnGeom, SIGNAL( " clicked()" ), self.AddGeomToExplession)
         QObject.connect( self.ui.btnRun, SIGNAL( " clicked()" ), self.Processing)
+        
         
         # TODO: add handler for tab replacing in txtFieldExp and txtGlobalExp
         # TODO: add handler for ctrl + scroll as font size selector in txtFieldExp and txtGlobalExp
@@ -99,7 +107,18 @@ class FieldPyculatorDialog(QDialog):
         value = item.text()
         self.ui.txtFieldExp.insertPlainText(value)
     
-    #---------------------------------------------------------------
+    #------------- Vars handlers  ---------------------------------
+    
+    def AddIdToExplession(self):
+        self.ui.txtFieldExp.insertPlainText('$id')
+        
+    def AddGeomToExplession(self):
+        self.ui.txtFieldExp.insertPlainText('$geom')
+    
+    #--------------------------------------------------------------
+    
+    
+    
     
     def Processing(self):
         #check edit mode

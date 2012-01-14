@@ -24,7 +24,7 @@ def name():
 def description():
     return "Use python for "
 def version():
-    return "Version 0.1"
+    return "Version 0.2.0"
 def icon():
     return "icon.png"
 def qgisMinimumVersion():
