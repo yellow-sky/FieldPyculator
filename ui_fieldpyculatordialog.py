@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui_fieldpyculatordialog.ui'
+# Form implementation generated from reading ui file './ui_fieldpyculatordialog.ui'
 #
-# Created: Sun Jan 15 01:00:01 2012
+# Created: Mon Feb 13 15:01:15 2012
 #      by: PyQt4 UI code generator 4.8.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_FieldPyculatorDialog(object):
     def setupUi(self, FieldPyculatorDialog):
         FieldPyculatorDialog.setObjectName(_fromUtf8("FieldPyculatorDialog"))
-        FieldPyculatorDialog.resize(587, 727)
+        FieldPyculatorDialog.resize(568, 604)
         FieldPyculatorDialog.setWindowTitle(QtGui.QApplication.translate("FieldPyculatorDialog", "FieldPyculator", None, QtGui.QApplication.UnicodeUTF8))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/fieldpyculatorplugin/icon.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -60,23 +60,19 @@ class Ui_FieldPyculatorDialog(object):
         self.labelUpdateField.setScaledContents(False)
         self.labelUpdateField.setObjectName(_fromUtf8("labelUpdateField"))
         self.gridLayout.addWidget(self.labelUpdateField, 2, 0, 1, 1)
-        self.grpAdvMode = QtGui.QGroupBox(FieldPyculatorDialog)
-        self.grpAdvMode.setMaximumSize(QtCore.QSize(16777215, 210))
-        self.grpAdvMode.setTitle(QtGui.QApplication.translate("FieldPyculatorDialog", "Advanced", None, QtGui.QApplication.UnicodeUTF8))
-        self.grpAdvMode.setCheckable(True)
-        self.grpAdvMode.setChecked(False)
-        self.grpAdvMode.setObjectName(_fromUtf8("grpAdvMode"))
-        self.verticalLayout_2 = QtGui.QVBoxLayout(self.grpAdvMode)
+        self.grpGlobalExpression = QtGui.QGroupBox(FieldPyculatorDialog)
+        self.grpGlobalExpression.setMaximumSize(QtCore.QSize(16777215, 210))
+        self.grpGlobalExpression.setTitle(QtGui.QApplication.translate("FieldPyculatorDialog", "Global expression", None, QtGui.QApplication.UnicodeUTF8))
+        self.grpGlobalExpression.setCheckable(True)
+        self.grpGlobalExpression.setChecked(False)
+        self.grpGlobalExpression.setObjectName(_fromUtf8("grpGlobalExpression"))
+        self.verticalLayout_2 = QtGui.QVBoxLayout(self.grpGlobalExpression)
         self.verticalLayout_2.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
-        self.labelGlobalExp = QtGui.QLabel(self.grpAdvMode)
-        self.labelGlobalExp.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Global expression", None, QtGui.QApplication.UnicodeUTF8))
-        self.labelGlobalExp.setObjectName(_fromUtf8("labelGlobalExp"))
-        self.verticalLayout_2.addWidget(self.labelGlobalExp)
-        self.txtGlobalExp = QtGui.QPlainTextEdit(self.grpAdvMode)
+        self.txtGlobalExp = QtGui.QPlainTextEdit(self.grpGlobalExpression)
         self.txtGlobalExp.setObjectName(_fromUtf8("txtGlobalExp"))
         self.verticalLayout_2.addWidget(self.txtGlobalExp)
-        self.gridLayout.addWidget(self.grpAdvMode, 6, 0, 1, 4)
+        self.gridLayout.addWidget(self.grpGlobalExpression, 6, 0, 1, 4)
         self.labelLayer = QtGui.QLabel(FieldPyculatorDialog)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
@@ -163,6 +159,7 @@ class Ui_FieldPyculatorDialog(object):
         self.gridLayout.addWidget(self.cmbUpdateField, 2, 1, 1, 3)
 
         self.retranslateUi(FieldPyculatorDialog)
+        QtCore.QObject.connect(self.grpGlobalExpression, QtCore.SIGNAL(_fromUtf8("toggled(bool)")), self.txtGlobalExp.setVisible)
         QtCore.QMetaObject.connectSlotsByName(FieldPyculatorDialog)
 
     def retranslateUi(self, FieldPyculatorDialog):

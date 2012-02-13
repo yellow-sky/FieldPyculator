@@ -46,6 +46,7 @@ class FieldPyculatorDialog(QDialog):
         self.ui.lblLayerName.setText(self.active_layer.name())
         self.ui.cmbUpdateField.addItems(self.GetFieldNames(self.active_layer))
         self.ui.lstFields.addItems(self.GetFieldNames(self.active_layer))
+        self.ui.txtGlobalExp.hide()
         self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
         
         #setup actions
@@ -131,7 +132,7 @@ class FieldPyculatorDialog(QDialog):
         new_ns = {}
         
         #run global code
-        if self.ui.grpAdvMode.isChecked():
+        if self.ui.grpGlobalExpression.isChecked():
             try:
                 code = unicode(self.ui.txtGlobalExp.toPlainText())
                 bytecode = compile(code, '<string>', 'exec')

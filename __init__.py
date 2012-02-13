@@ -24,7 +24,7 @@ def name():
 def description():
     return "Use python power for calculate fields of vector layers"
 def version():
-    return "Version 0.2.1"
+    return "Version 0.2.2"
 def icon():
     return "icon.png"
 def qgisMinimumVersion():

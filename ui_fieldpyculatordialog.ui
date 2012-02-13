@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>587</width>
-    <height>727</height>
+    <width>568</width>
+    <height>604</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,7 +80,7 @@
     </widget>
    </item>
    <item row="6" column="0" colspan="4">
-    <widget class="QGroupBox" name="grpAdvMode">
+    <widget class="QGroupBox" name="grpGlobalExpression">
      <property name="maximumSize">
       <size>
        <width>16777215</width>
@@ -88,7 +88,7 @@
       </size>
      </property>
      <property name="title">
-      <string>Advanced</string>
+      <string>Global expression</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -100,13 +100,6 @@
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
-      <item>
-       <widget class="QLabel" name="labelGlobalExp">
-        <property name="text">
-         <string>Global expression</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <widget class="QPlainTextEdit" name="txtGlobalExp"/>
       </item>
@@ -265,5 +258,22 @@
  <resources>
   <include location="resources.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>grpGlobalExpression</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>txtGlobalExp</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>293</x>
+     <y>188</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>293</x>
+     <y>200</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
