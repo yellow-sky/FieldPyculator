@@ -46,7 +46,7 @@ class FieldPyculatorDialog(QDialog):
         self.ui.lblLayerName.setText(self.active_layer.name())
         self.ui.cmbUpdateField.addItems(self.GetFieldNames(self.active_layer))
         self.ui.lstFields.addItems(self.GetFieldNames(self.active_layer))
-        self.ui.txtFieldExp.setPlainText(self.RESULT_VAR_NAME + ' = ')          
+        self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
         
         #setup actions
         self.ui.btnToggleEditing.setDefaultAction(self.iface.actionToggleEditing())
@@ -101,19 +101,19 @@ class FieldPyculatorDialog(QDialog):
 
     def AddFieldToExpression(self, item):
         field_name = item.text()
-        self.ui.txtFieldExp.insertPlainText('<'+field_name+'>')
+        self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
         
     def AddValueToExpression(self, item):
         value = item.text()
-        self.ui.txtFieldExp.insertPlainText(value)
+        self.ui.txtFieldExp.insertPlainText(' '+value+' ')
     
     #------------- Vars handlers  ---------------------------------
     
     def AddIdToExplession(self):
-        self.ui.txtFieldExp.insertPlainText('$id')
+        self.ui.txtFieldExp.insertPlainText(' $id ')
         
     def AddGeomToExplession(self):
-        self.ui.txtFieldExp.insertPlainText('$geom')
+        self.ui.txtFieldExp.insertPlainText(' $geom ')
     
     #--------------------------------------------------------------
     
@@ -316,7 +316,7 @@ class FieldPyculatorDialog(QDialog):
         stop = datetime.datetime.now()
 
         #workaround for python < 2.7
-        td = stop - start;
+        td = stop - start
         if sys.version_info[:2] < (2, 7):
             total_sec = (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
         else:

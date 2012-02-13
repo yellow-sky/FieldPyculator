@@ -12,7 +12,7 @@
 name=Simple field python calculator
 qgisMinimumVersion=1.7
 description=Use python power for calculate fields of vector layers 
-version=0.2.0
+version=0.2.1
 
 # end of mandatory metadata
 
@@ -24,7 +24,7 @@ version=0.2.0
 # tags are comma separated with spaces allowed
 tags=vector, calculator, python
 
-homepage=http://pyculator.ru
+homepage=https://github.com/yellow-sky/FieldPyculator/wiki
 tracker=https://github.com/yellow-sky/FieldPyculator/issues
 repository=http://gis-lab.info/programs/qgis/qgis-repo.xml
 icon=icon.png
