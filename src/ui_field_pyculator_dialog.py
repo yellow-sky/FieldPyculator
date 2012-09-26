@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './ui_fieldpyculatordialog.ui'
+# Form implementation generated from reading ui file './field_pyculator_dialog.ui'
 #
-# Created: Mon Feb 13 15:01:15 2012
+# Created: Wed Sep 26 17:04:48 2012
 #      by: PyQt4 UI code generator 4.8.6
 #
 # WARNING! All changes made in this file will be lost!

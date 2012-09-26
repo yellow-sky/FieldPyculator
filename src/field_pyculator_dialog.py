@@ -26,7 +26,7 @@ from PyQt4.QtGui import QDialog, QMessageBox
 from PyQt4.QtCore import QObject, SIGNAL, Qt
 from qgis.core import QgsFeature, QgsRectangle
  
-from ui_fieldpyculatordialog import Ui_FieldPyculatorDialog
+from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
 from syntax_highlighter import PythonHighlighter
 
 class FieldPyculatorDialog(QDialog):

@@ -31,5 +31,5 @@ def qgisMinimumVersion():
     return "1.7"
 def classFactory(iface):
     # load FieldPyculatorPlugin class from file FieldPyculatorPlugin
-    from fieldpyculatorplugin import FieldPyculatorPlugin
+    from field_pyculator_plugin import FieldPyculatorPlugin
     return FieldPyculatorPlugin(iface)

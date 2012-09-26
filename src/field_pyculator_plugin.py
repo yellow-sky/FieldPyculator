@@ -26,7 +26,7 @@ from qgis.core import QgsMapLayer
 # Initialize Qt resources from file resources.py
 import resources_rc
 # Import the code for the dialog
-from fieldpyculatordialog import FieldPyculatorDialog
+from field_pyculator_dialog import FieldPyculatorDialog
 
 class FieldPyculatorPlugin:
 
