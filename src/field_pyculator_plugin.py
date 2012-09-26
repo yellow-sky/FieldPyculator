@@ -1,6 +1,6 @@
 """
 /***************************************************************************
- FieldPyculatorPlugin
+ FieldPyculator
                                  A QGIS plugin
  Use python power for calculate fields of vector layers  
                               -------------------
@@ -21,7 +21,7 @@
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import QObject, QCoreApplication, SIGNAL
 from PyQt4.QtGui import QIcon, QAction
-from qgis.core import QgsMapLayer 
+from qgis.core import QgsMapLayer
 
 # Initialize Qt resources from file resources.py
 import resources_rc
@@ -44,37 +44,31 @@ class FieldPyculatorPlugin:
         # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)
         self.iface.addPluginToMenu(QCoreApplication.translate("FieldPyculator", "&Field pyculator"), self.action)
-        
-        
+
         # track layer changing
-        QObject.connect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layerChanged)
-      
+        QObject.connect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layer_changed)
+
         # check already selected layers
-        self.layerChanged()
-        
+        self.layer_changed()
+
 
     def unload(self):
         # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(QCoreApplication.translate("FieldPyculator", "&Field pyculator"),self.action)
+        self.iface.removePluginMenu(QCoreApplication.translate("FieldPyculator", "&Field pyculator"), self.action)
         self.iface.removeToolBarIcon(self.action)
-        
-        # remove layer changing tracking
-        QObject.disconnect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layerChanged)
+        # Remove layer changing tracking
+        QObject.disconnect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layer_changed)
 
 
-
-    def layerChanged(self):
+    def layer_changed(self):
         layer = self.iface.activeLayer()
-
         if (layer is None) or (layer.type() != QgsMapLayer.VectorLayer):
             self.action.setEnabled(False)
         else:
             self.action.setEnabled(True)
-            
 
-    # run method that performs all the real work
+
     def run(self):
-
         # create and show the dialog
         dlg = FieldPyculatorDialog(self.iface)
         # show the dialog
@@ -82,6 +76,4 @@ class FieldPyculatorPlugin:
         result = dlg.exec_()
         # See if OK was pressed
         if result == 1:
-            # do something useful (delete the line containing pass and
-            # substitute with your code
             pass
