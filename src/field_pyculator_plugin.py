@@ -18,24 +18,39 @@
  *                                                                         *
  ***************************************************************************/
 """
+from os import path
 # Import the PyQt and QGIS libraries
-from PyQt4.QtCore import QObject, SIGNAL, QCoreApplication
+from PyQt4.QtCore import QObject, SIGNAL, QCoreApplication,  QSettings, QLocale, QTranslator,  QVariant
 from PyQt4.QtGui import QIcon, QAction
 from qgis.core import QgsMapLayer
-
 # Initialize Qt resources from file resources.py
 import resources_rc
 # Import the code for the dialog
 from field_pyculator_dialog import FieldPyculatorDialog
+
+currentPath = path.abspath(path.dirname(__file__))
 
 class FieldPyculatorPlugin:
 
     def __init__(self, iface):
         # Save reference to the QGIS interface
         self.iface = iface
-        
+        # i18n support
+        overrideLocale = QSettings().value("locale/overrideFlag", QVariant(False)).toBool()
+        if not overrideLocale:
+            localeFullName = QLocale.system().name()
+        else:
+            localeFullName = QSettings().value("locale/userLocale", QVariant("")).toString()
+
+        self.localePath = currentPath + "/i18n/field_pyculator_" + localeFullName[0:2] + ".qm"
+        if path.exists(self.localePath):
+            self.translator = QTranslator()
+            self.translator.load(self.localePath)
+            QCoreApplication.installTranslator(self.translator)
+
+
     def tr(self, text):
-        return QCoreApplication.translate("FieldPyculator", text)
+        return QCoreApplication.translate("FieldPyculatorPlugin", text)
 
     def initGui(self):
         # Create action that will start plugin configuration

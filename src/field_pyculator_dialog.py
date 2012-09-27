@@ -138,7 +138,7 @@ class FieldPyculatorDialog(QDialog):
                 exec bytecode in new_ns
             except:
                 QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Global code block can't be executed!\r%1: %2")
+                            (self.tr("Global code block can't be executed!\n%1: %2"))
                             .arg(unicode(sys.exc_info()[0].__name__))
                             .arg(unicode(sys.exc_info()[1])))
                 return
@@ -173,7 +173,7 @@ class FieldPyculatorDialog(QDialog):
             bytecode = compile(code, '<string>', 'exec')
         except:
             QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                                 self.tr("Field code block can't be executed!\r%1: %2")
+                                 self.tr("Field code block can't be executed!\n%1: %2")
                                  .arg(unicode(sys.exc_info()[0].__name__))
                                  .arg(unicode(sys.exc_info()[1])))
             return
@@ -226,7 +226,7 @@ class FieldPyculatorDialog(QDialog):
                     exec bytecode in new_ns
                 except:
                     QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Field code block can't be executed for feature %3!\r%1: %2")
+                            self.tr("Field code block can't be executed for feature %3!\n%1: %2")
                             .arg(unicode(sys.exc_info()[0].__name__))
                             .arg(unicode(sys.exc_info()[1]))
                             .arg(unicode(feat_id)))
@@ -244,7 +244,7 @@ class FieldPyculatorDialog(QDialog):
                     self.active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
                 except:
                     QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Result value can't be assigned to the feature %3!\r%1: %2")
+                            self.tr("Result value can't be assigned to the feature %3!\n%1: %2")
                             .arg(unicode(sys.exc_info()[0].__name__))
                             .arg(unicode(sys.exc_info()[1]))
                             .arg(unicode(feat_id)))
@@ -285,7 +285,7 @@ class FieldPyculatorDialog(QDialog):
                     exec bytecode in new_ns
                 except:
                     QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Field code block can't be executed for feature %3!\r%1: %2")
+                            self.tr("Field code block can't be executed for feature %3!\n%1: %2")
                             .arg(unicode(sys.exc_info()[0].__name__))
                             .arg(unicode(sys.exc_info()[1]))
                             .arg(unicode(feat_id)))
@@ -303,7 +303,7 @@ class FieldPyculatorDialog(QDialog):
                     self.active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
                 except:
                     QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Result value can't be assigned to the feature %3!\r%1: %2")
+                            self.tr("Result value can't be assigned to the feature %3!\n%1: %2")
                             .arg(unicode(sys.exc_info()[0].__name__))
                             .arg(unicode(sys.exc_info()[1]))
                             .arg(unicode(feat_id)))
