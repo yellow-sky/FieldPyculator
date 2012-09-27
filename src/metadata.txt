@@ -4,11 +4,12 @@
 name=FieldPyculator
 qgisMinimumVersion=1.7
 description=Use python power for calculate fields of vector layers 
-version=0.2.2
+version=0.2.3
 
 
 # Optional items:
-changelog=Small form changes
+changelog: 0.2.3: Russian translation added
+    Small bugs fixed
 
 tags=vector, calculator, python
 

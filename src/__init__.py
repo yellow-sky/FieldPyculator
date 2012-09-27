@@ -26,7 +26,7 @@ def description():
     return "Use python power for calculate fields of vector layers"
     
 def version():
-    return "Version 0.2.2"
+    return "Version 0.2.3"
     
 def icon():
     return "icon.png"
