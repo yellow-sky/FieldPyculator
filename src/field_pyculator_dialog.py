@@ -82,8 +82,9 @@ class FieldPyculatorDialog(QDialog):
 
 
     def update_field_all_values(self):
-        field_name = self.ui.lstFields.currentItem().text()
-        self.update_field_values(field_name)
+        if self.ui.lstFields.currentItem():
+            field_name = self.ui.lstFields.currentItem().text()
+            self.update_field_values(field_name)
 
 
     def update_field_values(self, field_name, limit = -1):
