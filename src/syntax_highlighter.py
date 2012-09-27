@@ -28,6 +28,7 @@ STYLES = {
     'string2': generate_format('darkGreen'),
     'comment': generate_format('darkGray', 'italic'),
     'self': generate_format('black', 'italic'),
+    'value_var': generate_format('black', 'bold'),
     'fields': generate_format('darkMagenta'),
     'operator': generate_format('black'),
     'brace': generate_format('black')
@@ -90,14 +91,9 @@ class PythonHighlighter (QSyntaxHighlighter):
         rules += [
             # 'self'
             (r'\bself\b', 0, STYLES['self']),
-
-            # Double-quoted string, possibly containing escape sequences
-            (r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),
-            # Single-quoted string, possibly containing escape sequences
-            (r"'[^'\\]*(\\.[^'\\]*)*'", 0, STYLES['string']),
             
-            # Single-quoted string, possibly containing escape sequences
-            (r"<[^'\\]*(\\.[^'\\]*)*>", 0, STYLES['fields']),
+            # 'value'
+            (r'\bvalue\b', 0, STYLES['value_var']),
 
             # 'def' followed by an identifier
             (r'\bdef\b\s*(\w+)', 1, STYLES['defclass']),
@@ -111,6 +107,14 @@ class PythonHighlighter (QSyntaxHighlighter):
             (r'\b[+-]?[0-9]+[lL]?\b', 0, STYLES['numbers']),
             (r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b', 0, STYLES['numbers']),
             (r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', 0, STYLES['numbers']),
+            
+            # Fields
+            (r"<[^'\\]*(\\.[^'\\]*)*>", 0, STYLES['fields']),
+            
+            # Double-quoted string, possibly containing escape sequences
+            (r'"[^"\\]*(\\.[^"\\]*)*"', 0, STYLES['string']),
+            # Single-quoted string, possibly containing escape sequences
+            (r"'[^'\\]*(\\.[^'\\]*)*'", 0, STYLES['string']),
         ]
 
         # Build a QRegExp for each pattern
