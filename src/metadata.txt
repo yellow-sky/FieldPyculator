@@ -1,37 +1,22 @@
-# This file contains metadata for your plugin. Beginning
-# with version 1.8 this is the preferred way to supply information about a
-# plugin. The current method of embedding metadata in __init__.py will
-# be supported until version 2.0
-
-# This file should be included when you package your plugin.
-
 # Mandatory items:
 
-
 [general]
-name=Simple field python calculator
+name=FieldPyculator
 qgisMinimumVersion=1.7
 description=Use python power for calculate fields of vector layers 
 version=0.2.2
 
-# end of mandatory metadata
 
 # Optional items:
-
-# Uncomment the following line and add your changelog entries:
 changelog=Small form changes
 
-# tags are comma separated with spaces allowed
 tags=vector, calculator, python
 
 homepage=https://github.com/yellow-sky/FieldPyculator/wiki
 tracker=https://github.com/yellow-sky/FieldPyculator/issues
-repository=http://gis-lab.info/programs/qgis/qgis-repo.xml
+repository=https://github.com/yellow-sky/FieldPyculator
 icon=icon.png
-# experimental flag
 experimental=False
-
-# deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
 
 # Author contact information

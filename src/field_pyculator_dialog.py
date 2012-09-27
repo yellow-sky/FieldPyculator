@@ -44,8 +44,8 @@ class FieldPyculatorDialog(QDialog):
 
         #INIT CONTROLS VALUES
         self.ui.lblLayerName.setText(self.active_layer.name())
-        self.ui.cmbUpdateField.addItems(self.GetFieldNames(self.active_layer))
-        self.ui.lstFields.addItems(self.GetFieldNames(self.active_layer))
+        self.ui.cmbUpdateField.addItems(self.get_field_names(self.active_layer))
+        self.ui.lstFields.addItems(self.get_field_names(self.active_layer))
         self.ui.txtGlobalExp.hide()
         self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
 
@@ -63,29 +63,30 @@ class FieldPyculatorDialog(QDialog):
         self.ui.btnGeom.setFocusProxy(self.ui.txtFieldExp)
 
         #SIGNALS
-        QObject.connect( self.ui.lstFields, SIGNAL( "currentItemChanged ( QListWidgetItem * , QListWidgetItem * )" ), self.UpdateFieldSampleValues)
-        QObject.connect( self.ui.lstFields, SIGNAL( "itemDoubleClicked(QListWidgetItem *)" ), self.AddFieldToExpression)
-        QObject.connect( self.ui.lstValues, SIGNAL( "itemDoubleClicked(QListWidgetItem *)" ), self.AddValueToExpression)
-        QObject.connect( self.ui.btnGetAll, SIGNAL( " clicked()" ), self.UpdateFieldAllValues)
-        QObject.connect( self.ui.btnId, SIGNAL( " clicked()" ), self.AddIdToExplession)
-        QObject.connect( self.ui.btnGeom, SIGNAL( " clicked()" ), self.AddGeomToExplession)
-        QObject.connect( self.ui.btnRun, SIGNAL( " clicked()" ), self.Processing)
+        QObject.connect( self.ui.lstFields, SIGNAL( "currentItemChanged ( QListWidgetItem * , QListWidgetItem * )" ), self.update_field_sample_values)
+        QObject.connect( self.ui.lstFields, SIGNAL( "itemDoubleClicked(QListWidgetItem *)" ), self.add_field_to_expression)
+        QObject.connect( self.ui.lstValues, SIGNAL( "itemDoubleClicked(QListWidgetItem *)" ), self.add_value_to_expression)
+        QObject.connect( self.ui.btnGetAll, SIGNAL( " clicked()" ), self.update_field_all_values)
+        QObject.connect( self.ui.btnId, SIGNAL( " clicked()" ), self.add_id_to_explession)
+        QObject.connect( self.ui.btnGeom, SIGNAL( " clicked()" ), self.add_geom_to_explession)
+        QObject.connect( self.ui.btnRun, SIGNAL( " clicked()" ), self.processing)
 
 
         # TODO: add handler for tab replacing in txtFieldExp and txtGlobalExp
         # TODO: add handler for ctrl + scroll as font size selector in txtFieldExp and txtGlobalExp
 
     #--------------- Fields handlers ---------------------------
-
-    def UpdateFieldSampleValues(self, new_item, old_item):
+    def update_field_sample_values(self, new_item, old_item):
         field_name = new_item.text()
-        self.UpdateFieldValues(field_name, 25)
-            
-    def UpdateFieldAllValues(self):
+        self.update_field_values(field_name, 25)
+
+
+    def update_field_all_values(self):
         field_name = self.ui.lstFields.currentItem().text()
-        self.UpdateFieldValues(field_name)
-                
-    def UpdateFieldValues(self, field_name, limit = -1):
+        self.update_field_values(field_name)
+
+
+    def update_field_values(self, field_name, limit = -1):
         self.setCursor(Qt.WaitCursor)
         field_ind = self.data_provider.fieldNameIndex(field_name)
         field_type = self.data_provider.fields()[field_ind].typeName()
@@ -99,28 +100,26 @@ class FieldPyculatorDialog(QDialog):
                 self.ui.lstValues.addItem(unicode(val.toString()))
         self.unsetCursor()
 
-    def AddFieldToExpression(self, item):
+
+    def add_field_to_expression(self, item):
         field_name = item.text()
         self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
-        
-    def AddValueToExpression(self, item):
+
+
+    def add_value_to_expression(self, item):
         value = item.text()
         self.ui.txtFieldExp.insertPlainText(' '+value+' ')
     
     #------------- Vars handlers  ---------------------------------
-    
-    def AddIdToExplession(self):
+    def add_id_to_explession(self):
         self.ui.txtFieldExp.insertPlainText(' $id ')
         
-    def AddGeomToExplession(self):
+    def add_geom_to_explession(self):
         self.ui.txtFieldExp.insertPlainText(' $geom ')
-    
     #--------------------------------------------------------------
     
     
-    
-    
-    def Processing(self):
+    def processing(self):
         #check edit mode
         if not self.active_layer.isEditable():
             QMessageBox.warning(self, self.tr("FieldPyculator warning"),
@@ -211,10 +210,10 @@ class FieldPyculatorDialog(QDialog):
                     new_ns['__geom'] = geom
 
                 if need_attrs:
-                    attrMap = feat.attributeMap()
+                    attr_map = feat.attributeMap()
                     attr = []
-                    for num, a in attrMap.iteritems():
-                        attr.append(self.Qvar2py(a))
+                    for num, a in attr_map.iteritems():
+                        attr.append(self.qvar2py(a))
                     new_ns['__attr'] = attr
                 
                 #clear old result
@@ -270,10 +269,10 @@ class FieldPyculatorDialog(QDialog):
                     new_ns['__geom'] = geom
 
                 if need_attrs:
-                    attrMap = feat.attributeMap()
+                    attr_map = feat.attributeMap()
                     attr = []
-                    for num, a in attrMap.iteritems():
-                        attr.append(self.Qvar2py(a))
+                    for num, a in attr_map.iteritems():
+                        attr.append(self.qvar2py(a))
                     new_ns['__attr'] = attr
 
                 #clear old result
@@ -327,7 +326,7 @@ class FieldPyculatorDialog(QDialog):
                          )
 
 
-    def Qvar2py(self, qv):
+    def qvar2py(self, qv):
         if qv.type() == 2:
             return qv.toInt()[0]
         if qv.type() == 10:
@@ -337,7 +336,7 @@ class FieldPyculatorDialog(QDialog):
         return None
 
 
-    def GetFieldNames(self, layer):
+    def get_field_names(self, layer):
         field_map = layer.dataProvider().fields()
         field_list = []
         for num, field in field_map.iteritems():

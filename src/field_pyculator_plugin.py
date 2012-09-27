@@ -19,7 +19,7 @@
  ***************************************************************************/
 """
 # Import the PyQt and QGIS libraries
-from PyQt4.QtCore import QObject, QCoreApplication, SIGNAL
+from PyQt4.QtCore import QObject, SIGNAL, QCoreApplication
 from PyQt4.QtGui import QIcon, QAction
 from qgis.core import QgsMapLayer
 
@@ -33,17 +33,19 @@ class FieldPyculatorPlugin:
     def __init__(self, iface):
         # Save reference to the QGIS interface
         self.iface = iface
+        
+    def tr(self, text):
+        return QCoreApplication.translate("FieldPyculator", text)
 
     def initGui(self):
         # Create action that will start plugin configuration
-        self.action = QAction(QIcon(":/plugins/fieldpyculatorplugin/icon.png"), \
-            QCoreApplication.translate("FieldPyculator","Field pyculator"), self.iface.mainWindow())
+        self.action = QAction(QIcon(":/plugins/fieldpyculatorplugin/icon.png"), self.tr("FieldPyculator"), self.iface.mainWindow())
         # connect the action to the run method
         QObject.connect(self.action, SIGNAL("triggered()"), self.run)
 
         # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(QCoreApplication.translate("FieldPyculator", "&Field pyculator"), self.action)
+        self.iface.addPluginToMenu(self.tr("&FieldPyculator"), self.action)
 
         # track layer changing
         QObject.connect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layer_changed)
@@ -54,7 +56,7 @@ class FieldPyculatorPlugin:
 
     def unload(self):
         # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(QCoreApplication.translate("FieldPyculator", "&Field pyculator"), self.action)
+        self.iface.removePluginMenu(self.tr("&FieldPyculator"), self.action)
         self.iface.removeToolBarIcon(self.action)
         # Remove layer changing tracking
         QObject.disconnect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layer_changed)
