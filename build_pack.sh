@@ -1,18 +1,29 @@
 #!/bin/bash
 
 #Build zip packet
+BUILD_DIR=/tmp/build_plugin
+PLUGIN_NAME=field_pyculator
 
 #Create if need
-rm -R /tmp/build_plugin/field_pyculator
-mkdir /tmp/build_plugin/
-mkdir /tmp/build_plugin/field_pyculator
-cp -R ./src/* /tmp/build_plugin/field_pyculator
+mkdir $BUILD_DIR
+
+#Clear build dir
+rm -R $BUILD_DIR/$PLUGIN_NAME
+rm $BUILD_DIR/$PLUGIN_NAME*.zip
+
+#Create plugin dir
+mkdir $BUILD_DIR/$PLUGIN_NAME
+#Copy sources
+cp -R ./src/* $BUILD_DIR/$PLUGIN_NAME
 
 #Clean
-rm /tmp/build_plugin/field_pyculator/*.pyc
-rm /tmp/build_plugin/field_pyculator.zip
+rm $BUILD_DIR/$PLUGIN_NAME/*.pyc
 
-cd /tmp/build_plugin/
-zip -r field_pyculator.zip ./field_pyculator
+#Get version
+cd $BUILD_DIR
+VER=`grep "version=" ./$PLUGIN_NAME/metadata.txt | sed 's/version=//'`
 
-echo "Pack for load: /tmp/build_plugin/field_pyculator.zip"
+#Zip dir
+zip -9 -r $PLUGIN_NAME"_"$VER.zip ./$PLUGIN_NAME
+
+echo "Pack for upload: $BUILD_DIR/$PLUGIN_NAME"_"$VER.zip"
