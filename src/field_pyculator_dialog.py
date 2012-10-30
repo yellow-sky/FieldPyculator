@@ -27,7 +27,6 @@ from PyQt4.QtCore import QObject, SIGNAL, Qt
 from qgis.core import QgsFeature, QgsRectangle
  
 from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
-from syntax_highlighter import PythonHighlighter
 
 class FieldPyculatorDialog(QDialog):
     RESULT_VAR_NAME = 'value'
@@ -42,19 +41,39 @@ class FieldPyculatorDialog(QDialog):
         self.active_layer = self.iface.activeLayer()
         self.data_provider =  self.active_layer.dataProvider()
 
+
+        #setup syntax highlight
+        #try:
+        from sci_editor import SciEditor
+        #replace txtGlobalExp
+        self.ui.grpGlobalExpression.layout().removeWidget(self.ui.txtGlobalExp)
+        self.ui.txtGlobalExp.close()
+        self.ui.txtGlobalExp = SciEditor(self)
+        self.ui.grpGlobalExpression.layout().addWidget(self.ui.txtGlobalExp)
+        self.ui.grpGlobalExpression.layout().update()
+        #replace txtFieldExp
+        self.ui.grpFieldExpression.layout().removeWidget(self.ui.txtFieldExp)
+        self.ui.txtFieldExp.close()
+        self.ui.txtFieldExp = SciEditor(self)
+        self.ui.grpFieldExpression.layout().addWidget(self.ui.txtFieldExp)
+        self.ui.grpFieldExpression.layout().update()
+        
+        #except:
+        #    from syntax_highlighter import PythonHighlighter
+        #    self.highlight_field = PythonHighlighter(self.ui.txtFieldExp.document())
+        #    self.highlight_global = PythonHighlighter(self.ui.txtGlobalExp.document())
+
+
         #INIT CONTROLS VALUES
         self.ui.lblLayerName.setText(self.active_layer.name())
         self.ui.cmbUpdateField.addItems(self.get_field_names(self.active_layer))
         self.ui.lstFields.addItems(self.get_field_names(self.active_layer))
         self.ui.txtGlobalExp.hide()
-        self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
+        #self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
 
         #setup actions
         self.ui.btnToggleEditing.setDefaultAction(self.iface.actionToggleEditing())
 
-        #setup syntax highlight
-        self.highlight_field = PythonHighlighter(self.ui.txtFieldExp.document())
-        self.highlight_global = PythonHighlighter(self.ui.txtGlobalExp.document())
 
         #setup auto focus
         self.ui.lstFields.setFocusProxy(self.ui.txtFieldExp)
@@ -104,19 +123,21 @@ class FieldPyculatorDialog(QDialog):
 
     def add_field_to_expression(self, item):
         field_name = item.text()
-        self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
+        #self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
 
 
     def add_value_to_expression(self, item):
         value = item.text()
-        self.ui.txtFieldExp.insertPlainText(' '+value+' ')
+        #self.ui.txtFieldExp.insertPlainText(' '+value+' ')
     
     #------------- Vars handlers  ---------------------------------
     def add_id_to_explession(self):
-        self.ui.txtFieldExp.insertPlainText(' $id ')
+        #self.ui.txtFieldExp.insertPlainText(' $id ')
+        pass
         
     def add_geom_to_explession(self):
-        self.ui.txtFieldExp.insertPlainText(' $geom ')
+        #self.ui.txtFieldExp.insertPlainText(' $geom ')
+        pass
     #--------------------------------------------------------------
     
     
