@@ -20,7 +20,9 @@
 """
 #There is some of QGIS console code
 
-from PyQt4.Qsci import QsciScintilla, QsciLexerPython
+from PyQt4.Qsci import QsciScintilla, QsciLexerPython, QsciAPIs
+from PyQt4.QtCore import QSettings, Qt, SIGNAL, QByteArray
+from PyQt4.QtGui import QFont, QShortcut, QKeySequence
 
 class SciEditor(QsciScintilla):
     def __init__(self, parent=None):
@@ -45,7 +47,7 @@ class SciEditor(QsciScintilla):
         self.setLexers()
         
         self.setAutoCompletionThreshold(2)
-        self.setAutoCompletionSource(self.AcsAPIs)
+        self.setAutoCompletionSource(self.AcsAll)
         
         # Don't want to see the horizontal scrollbar at all
         # Use raw message to Scintilla here (all messages are documented
@@ -110,7 +112,8 @@ class SciEditor(QsciScintilla):
         else:
             apiPath = settings.value("pythonConsole/userAPI").toStringList()
             for i in range(0, len(apiPath)):
-                self.api.load(QString(unicode(apiPath[i])))        
+                self.api.load(QString(unicode(apiPath[i])))
+            self.api.load("/usr/lib64/qt4/qsci/api/python/Python-2.7.api")
             self.api.prepare()
             self.lexer.setAPIs(self.api)
 
@@ -150,7 +153,14 @@ class SciEditor(QsciScintilla):
         
     def refreshLexerProperties(self):
         self.setLexers()
+   
+
+    #imitation plain text editor
+    def toPlainText(self):
+        return self.getText()
         
+    def insertPlainText(self, text):
+        self.insert(text)
         
     
 

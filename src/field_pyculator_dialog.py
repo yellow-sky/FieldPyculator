@@ -69,7 +69,7 @@ class FieldPyculatorDialog(QDialog):
         self.ui.cmbUpdateField.addItems(self.get_field_names(self.active_layer))
         self.ui.lstFields.addItems(self.get_field_names(self.active_layer))
         self.ui.txtGlobalExp.hide()
-        #self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
+        self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
 
         #setup actions
         self.ui.btnToggleEditing.setDefaultAction(self.iface.actionToggleEditing())
@@ -123,20 +123,20 @@ class FieldPyculatorDialog(QDialog):
 
     def add_field_to_expression(self, item):
         field_name = item.text()
-        #self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
+        self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
 
 
     def add_value_to_expression(self, item):
         value = item.text()
-        #self.ui.txtFieldExp.insertPlainText(' '+value+' ')
+        self.ui.txtFieldExp.insertPlainText(' '+value+' ')
     
     #------------- Vars handlers  ---------------------------------
     def add_id_to_explession(self):
-        #self.ui.txtFieldExp.insertPlainText(' $id ')
+        self.ui.txtFieldExp.insertPlainText(' $id ')
         pass
         
     def add_geom_to_explession(self):
-        #self.ui.txtFieldExp.insertPlainText(' $geom ')
+        self.ui.txtFieldExp.insertPlainText(' $geom ')
         pass
     #--------------------------------------------------------------
     
