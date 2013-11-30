@@ -23,6 +23,7 @@
 from PyQt4.Qsci import QsciScintilla, QsciLexerPython, QsciAPIs
 from PyQt4.QtCore import QSettings, Qt, SIGNAL, QByteArray
 from PyQt4.QtGui import QFont, QShortcut, QKeySequence
+from qgis.core import QgsApplication
 
 class SciEditor(QsciScintilla):
     def __init__(self, parent=None):
@@ -46,7 +47,7 @@ class SciEditor(QsciScintilla):
         # courier.
         self.setLexers()
         
-        self.setAutoCompletionThreshold(2)
+        self.setAutoCompletionThreshold(0)
         self.setAutoCompletionSource(self.AcsAll)
         
         # Don't want to see the horizontal scrollbar at all
