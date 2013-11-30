@@ -19,21 +19,28 @@
  ***************************************************************************/
  This script initializes the plugin, making it known to QGIS.
 """
+
+
 def name():
     return "FieldPyculator"
-    
+
+
 def description():
     return "Use python power for calculate fields of vector layers"
-    
+
+
 def version():
     return "Version 0.2.4"
-    
+
+
 def icon():
     return "icon.png"
-    
+
+
 def qgisMinimumVersion():
     return "1.7"
-    
+
+
 def classFactory(iface):
     from field_pyculator_plugin import FieldPyculatorPlugin
     return FieldPyculatorPlugin(iface)

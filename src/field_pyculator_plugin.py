@@ -30,24 +30,24 @@ from field_pyculator_dialog import FieldPyculatorDialog
 
 currentPath = path.abspath(path.dirname(__file__))
 
+
 class FieldPyculatorPlugin:
 
     def __init__(self, iface):
         # Save reference to the QGIS interface
         self.iface = iface
         # i18n support
-        overrideLocale = QSettings().value("locale/overrideFlag", QVariant(False)).toBool()
-        if not overrideLocale:
-            localeFullName = QLocale.system().name()
+        override_locale = QSettings().value("locale/overrideFlag", QVariant(False)).toBool()
+        if not override_locale:
+            locale_full_name = QLocale.system().name()
         else:
-            localeFullName = QSettings().value("locale/userLocale", QVariant("")).toString()
+            locale_full_name = QSettings().value("locale/userLocale", QVariant("")).toString()
 
-        self.localePath = currentPath + "/i18n/field_pyculator_" + localeFullName[0:2] + ".qm"
-        if path.exists(self.localePath):
+        self.locale_path = currentPath + "/i18n/field_pyculator_" + locale_full_name[0:2] + ".qm"
+        if path.exists(self.locale_path):
             self.translator = QTranslator()
-            self.translator.load(self.localePath)
+            self.translator.load(self.locale_path)
             QCoreApplication.installTranslator(self.translator)
-
 
     def tr(self, text):
         return QCoreApplication.translate("FieldPyculatorPlugin", text)
@@ -68,7 +68,6 @@ class FieldPyculatorPlugin:
         # check already selected layers
         self.layer_changed()
 
-
     def unload(self):
         # Remove the plugin menu item and icon
         self.iface.removePluginMenu(self.tr("&FieldPyculator"), self.action)
@@ -76,14 +75,12 @@ class FieldPyculatorPlugin:
         # Remove layer changing tracking
         QObject.disconnect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layer_changed)
 
-
     def layer_changed(self):
         layer = self.iface.activeLayer()
         if (layer is None) or (layer.type() != QgsMapLayer.VectorLayer):
             self.action.setEnabled(False)
         else:
             self.action.setEnabled(True)
-
 
     def run(self):
         # create and show the dialog
