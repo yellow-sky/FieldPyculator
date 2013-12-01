@@ -22,7 +22,7 @@ import sys
 import datetime
 #import locale
 
-from PyQt4.QtGui import QDialog, QMessageBox
+from PyQt4.QtGui import QDialog, QMessageBox, QFont
 from PyQt4.QtCore import QObject, SIGNAL, Qt
 from qgis.core import QgsFeature, QgsRectangle
  
@@ -73,6 +73,18 @@ class FieldPyculatorDialog(QDialog):
         QObject.connect(self.ui.btnRun, SIGNAL("clicked()"), self.processing)
         # TODO: add handler for tab replacing in txtFieldExp and txtGlobalExp
         # TODO: add handler for ctrl + scroll as font size selector in txtFieldExp and txtGlobalExp
+        #QObject.connect(self.ui.txtFieldExp, SIGNAL("wheelEvent( QWheelEvent * )"), self.wheelEvent2)
+
+    #---------------
+    def wheelEvent(self, event):
+        delta = event.delta()/100
+        ctrl = event.modifiers() == Qt.ControlModifier
+        if ctrl:
+            font = self.ui.txtFieldExp.font()
+            if 5 < (font.pointSize() + delta) < 20:
+                new_font = QFont(font.family(), font.pointSize() + delta)
+                self.ui.txtFieldExp.setFont(new_font)
+                self.ui.txtGlobalExp.setFont(new_font)
 
     #--------------- Fields handlers ---------------------------
     def update_field_sample_values(self, new_item, old_item):
