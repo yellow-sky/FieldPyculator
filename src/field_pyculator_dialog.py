@@ -24,7 +24,7 @@ import datetime
 
 from PyQt4.QtGui import QDialog, QMessageBox, QFont
 from PyQt4.QtCore import QObject, SIGNAL, Qt
-from qgis.core import QgsFeature, QgsRectangle
+from qgis.core import QgsFeature, QgsRectangle, QgsMapLayerRegistry
  
 from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
 from syntax_highlighter import PythonHighlighter
@@ -39,14 +39,15 @@ class FieldPyculatorDialog(QDialog):
         self.ui = Ui_FieldPyculatorDialog()
         self.ui.setupUi(self)
 
+        active_layer = iface.activeLayer()
         self.iface = iface
-        self.active_layer = self.iface.activeLayer()
-        self.data_provider = self.active_layer.dataProvider()
+        self.active_layer_id = active_layer.id()
+        #self.data_provider = self.active_layer.dataProvider()
 
         #INIT CONTROLS VALUES
-        self.ui.lblLayerName.setText(self.active_layer.name())
-        self.ui.cmbUpdateField.addItems(self.get_field_names(self.active_layer))
-        self.ui.lstFields.addItems(self.get_field_names(self.active_layer))
+        self.ui.lblLayerName.setText(active_layer.name())
+        self.ui.cmbUpdateField.addItems(self.get_field_names(active_layer))
+        self.ui.lstFields.addItems(self.get_field_names(active_layer))
         self.ui.txtGlobalExp.hide()
         self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
 
@@ -86,6 +87,16 @@ class FieldPyculatorDialog(QDialog):
                 self.ui.txtFieldExp.setFont(new_font)
                 self.ui.txtGlobalExp.setFont(new_font)
 
+    def get_active_layer(self):
+        #get and check layer
+        active_layer = QgsMapLayerRegistry.instance().mapLayer(self.active_layer_id)
+        if not active_layer:
+            QMessageBox.critical(self, self.tr("FieldPyculator error"),
+                                 self.tr("Layer was not found! It could be removed!"))
+            return None
+        else:
+            return active_layer
+
     #--------------- Fields handlers ---------------------------
     def update_field_sample_values(self, new_item, old_item):
         field_name = new_item.text()
@@ -97,12 +108,17 @@ class FieldPyculatorDialog(QDialog):
             self.update_field_values(field_name)
 
     def update_field_values(self, field_name, limit=-1):
+        active_layer = self.get_active_layer()
+        if not active_layer:
+            return
+        data_provider = active_layer.dataProvider()
+
         self.setCursor(Qt.WaitCursor)
-        field_ind = self.data_provider.fieldNameIndex(field_name)
-        field_type = self.data_provider.fields()[field_ind].typeName()
+        field_ind = data_provider.fieldNameIndex(field_name)
+        field_type = data_provider.fields()[field_ind].typeName()
         
         self.ui.lstValues.clear()
-        values = self.data_provider.uniqueValues(field_ind, limit)
+        values = data_provider.uniqueValues(field_ind, limit)
         for val in values:
             if field_type == 'String':
                 self.ui.lstValues.addItem("'" + unicode(val.toString()) + "'")
@@ -127,8 +143,15 @@ class FieldPyculatorDialog(QDialog):
     #--------------------------------------------------------------
 
     def processing(self):
+        #get and check layer
+        active_layer = self.get_active_layer()
+        if not active_layer:
+            # may be need to disable form?
+            return
+        data_provider = active_layer.dataProvider()
+
         #check edit mode
-        if not self.active_layer.isEditable():
+        if not active_layer.isEditable():
             QMessageBox.warning(self, self.tr("FieldPyculator warning"),
                                  self.tr("Layer is not in edit mode! Please start editing the layer!"))
             return    
@@ -154,7 +177,7 @@ class FieldPyculatorDialog(QDialog):
         #TODO: check 'result' existing in text of code???!!!
             
         #replace all fields tags
-        field_map = self.data_provider.fields()
+        field_map = data_provider.fields()
         for num, field in field_map.iteritems():
             field_name = unicode(field.name())
             replval = '__attr[' + str(num) + ']'
@@ -183,7 +206,7 @@ class FieldPyculatorDialog(QDialog):
             return
 
         #get num of updating field
-        field_num = self.data_provider.fieldNameIndex(self.ui.cmbUpdateField.currentText())
+        field_num = data_provider.fieldNameIndex(self.ui.cmbUpdateField.currentText())
         
         #setup progress bar       
         self.ui.prgTotal.setValue(0)
@@ -191,18 +214,18 @@ class FieldPyculatorDialog(QDialog):
         #run
         if not self.ui.chkOnlySelected.isChecked():
             #select all features
-            features_for_update = self.data_provider.featureCount()
+            features_for_update = data_provider.featureCount()
             if features_for_update > 0:
                 self.ui.prgTotal.setMaximum(features_for_update)
             
             feat = QgsFeature()
             if need_attrs:
-                attr_ind = self.data_provider.attributeIndexes()
+                attr_ind = data_provider.attributeIndexes()
             else:
                 attr_ind = []
-            self.data_provider.select(attr_ind, QgsRectangle(), need_geom)
+            data_provider.select(attr_ind, QgsRectangle(), need_geom)
             
-            while self.data_provider.nextFeature(feat):
+            while data_provider.nextFeature(feat):
                 feat_id = feat.id()
                 
                 #add needed vars
@@ -244,7 +267,7 @@ class FieldPyculatorDialog(QDialog):
                 
                 #try assign
                 try:
-                    self.active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
+                    active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
                 except:
                     QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
                             self.tr("Result value can't be assigned to the feature %3!\n%1: %2")
@@ -257,11 +280,11 @@ class FieldPyculatorDialog(QDialog):
 
         else:
             #only selected (TODO: NEED REFACTORING - copy-past!!!)
-            features_for_update = self.active_layer.selectedFeatureCount()
+            features_for_update = active_layer.selectedFeatureCount()
             if features_for_update > 0:
                 self.ui.prgTotal.setMaximum(features_for_update)
 
-            for feat in self.active_layer.selectedFeatures():
+            for feat in active_layer.selectedFeatures():
                 feat_id = feat.id()
 
                 #add needed vars
@@ -303,7 +326,7 @@ class FieldPyculatorDialog(QDialog):
 
                 #try assign
                 try:
-                    self.active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
+                    active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
                 except:
                     QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
                             self.tr("Result value can't be assigned to the feature %3!\n%1: %2")
