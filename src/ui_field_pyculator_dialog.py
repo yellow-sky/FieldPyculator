@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file './field_pyculator_dialog.ui'
 #
-# Created: Wed Sep 26 17:04:48 2012
-#      by: PyQt4 UI code generator 4.8.6
+# Created: Tue Dec  3 19:14:47 2013
+#      by: PyQt4 UI code generator 4.10.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,20 +12,27 @@ from PyQt4 import QtCore, QtGui
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
-    _fromUtf8 = lambda s: s
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_FieldPyculatorDialog(object):
     def setupUi(self, FieldPyculatorDialog):
         FieldPyculatorDialog.setObjectName(_fromUtf8("FieldPyculatorDialog"))
         FieldPyculatorDialog.resize(568, 604)
-        FieldPyculatorDialog.setWindowTitle(QtGui.QApplication.translate("FieldPyculatorDialog", "FieldPyculator", None, QtGui.QApplication.UnicodeUTF8))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/fieldpyculatorplugin/icon.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         FieldPyculatorDialog.setWindowIcon(icon)
         self.gridLayout = QtGui.QGridLayout(FieldPyculatorDialog)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.grpFieldExpression = QtGui.QGroupBox(FieldPyculatorDialog)
-        self.grpFieldExpression.setTitle(QtGui.QApplication.translate("FieldPyculatorDialog", "Field expression", None, QtGui.QApplication.UnicodeUTF8))
         self.grpFieldExpression.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.grpFieldExpression.setCheckable(False)
         self.grpFieldExpression.setObjectName(_fromUtf8("grpFieldExpression"))
@@ -46,7 +53,6 @@ class Ui_FieldPyculatorDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btnRun.sizePolicy().hasHeightForWidth())
         self.btnRun.setSizePolicy(sizePolicy)
-        self.btnRun.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Run", None, QtGui.QApplication.UnicodeUTF8))
         self.btnRun.setObjectName(_fromUtf8("btnRun"))
         self.gridLayout.addWidget(self.btnRun, 9, 3, 1, 1)
         self.labelUpdateField = QtGui.QLabel(FieldPyculatorDialog)
@@ -55,14 +61,12 @@ class Ui_FieldPyculatorDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.labelUpdateField.sizePolicy().hasHeightForWidth())
         self.labelUpdateField.setSizePolicy(sizePolicy)
-        self.labelUpdateField.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Update field:", None, QtGui.QApplication.UnicodeUTF8))
         self.labelUpdateField.setTextFormat(QtCore.Qt.PlainText)
         self.labelUpdateField.setScaledContents(False)
         self.labelUpdateField.setObjectName(_fromUtf8("labelUpdateField"))
         self.gridLayout.addWidget(self.labelUpdateField, 2, 0, 1, 1)
         self.grpGlobalExpression = QtGui.QGroupBox(FieldPyculatorDialog)
         self.grpGlobalExpression.setMaximumSize(QtCore.QSize(16777215, 210))
-        self.grpGlobalExpression.setTitle(QtGui.QApplication.translate("FieldPyculatorDialog", "Global expression", None, QtGui.QApplication.UnicodeUTF8))
         self.grpGlobalExpression.setCheckable(True)
         self.grpGlobalExpression.setChecked(False)
         self.grpGlobalExpression.setObjectName(_fromUtf8("grpGlobalExpression"))
@@ -79,11 +83,9 @@ class Ui_FieldPyculatorDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.labelLayer.sizePolicy().hasHeightForWidth())
         self.labelLayer.setSizePolicy(sizePolicy)
-        self.labelLayer.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Layer:", None, QtGui.QApplication.UnicodeUTF8))
         self.labelLayer.setObjectName(_fromUtf8("labelLayer"))
         self.gridLayout.addWidget(self.labelLayer, 0, 0, 1, 1)
         self.chkOnlySelected = QtGui.QCheckBox(FieldPyculatorDialog)
-        self.chkOnlySelected.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Update only selected features", None, QtGui.QApplication.UnicodeUTF8))
         self.chkOnlySelected.setObjectName(_fromUtf8("chkOnlySelected"))
         self.gridLayout.addWidget(self.chkOnlySelected, 5, 0, 1, 4)
         self.lblLayerName = QtGui.QLabel(FieldPyculatorDialog)
@@ -96,22 +98,15 @@ class Ui_FieldPyculatorDialog(object):
         font.setBold(True)
         font.setWeight(75)
         self.lblLayerName.setFont(font)
-        self.lblLayerName.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "LayerName", None, QtGui.QApplication.UnicodeUTF8))
         self.lblLayerName.setObjectName(_fromUtf8("lblLayerName"))
         self.gridLayout.addWidget(self.lblLayerName, 0, 1, 1, 2)
-        self.btnToggleEditing = QtGui.QToolButton(FieldPyculatorDialog)
-        self.btnToggleEditing.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.btnToggleEditing.setObjectName(_fromUtf8("btnToggleEditing"))
-        self.gridLayout.addWidget(self.btnToggleEditing, 0, 3, 1, 1)
         self.grpFields = QtGui.QGroupBox(FieldPyculatorDialog)
         self.grpFields.setMaximumSize(QtCore.QSize(16777215, 170))
-        self.grpFields.setTitle(QtGui.QApplication.translate("FieldPyculatorDialog", "Existing fields and vars", None, QtGui.QApplication.UnicodeUTF8))
         self.grpFields.setObjectName(_fromUtf8("grpFields"))
         self.gridLayout_2 = QtGui.QGridLayout(self.grpFields)
         self.gridLayout_2.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
         self.btnGetAll = QtGui.QPushButton(self.grpFields)
-        self.btnGetAll.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Get all", None, QtGui.QApplication.UnicodeUTF8))
         self.btnGetAll.setObjectName(_fromUtf8("btnGetAll"))
         self.gridLayout_2.addWidget(self.btnGetAll, 3, 7, 1, 1)
         self.btnId = QtGui.QPushButton(self.grpFields)
@@ -120,7 +115,6 @@ class Ui_FieldPyculatorDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btnId.sizePolicy().hasHeightForWidth())
         self.btnId.setSizePolicy(sizePolicy)
-        self.btnId.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "$id", None, QtGui.QApplication.UnicodeUTF8))
         self.btnId.setObjectName(_fromUtf8("btnId"))
         self.gridLayout_2.addWidget(self.btnId, 3, 4, 1, 1)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Minimum)
@@ -129,14 +123,12 @@ class Ui_FieldPyculatorDialog(object):
         self.lstValues.setObjectName(_fromUtf8("lstValues"))
         self.gridLayout_2.addWidget(self.lstValues, 2, 4, 1, 4)
         self.labelFields = QtGui.QLabel(self.grpFields)
-        self.labelFields.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Fields", None, QtGui.QApplication.UnicodeUTF8))
         self.labelFields.setObjectName(_fromUtf8("labelFields"))
         self.gridLayout_2.addWidget(self.labelFields, 0, 1, 1, 3)
         self.lstFields = QtGui.QListWidget(self.grpFields)
         self.lstFields.setObjectName(_fromUtf8("lstFields"))
         self.gridLayout_2.addWidget(self.lstFields, 2, 1, 2, 3)
         self.labelValues = QtGui.QLabel(self.grpFields)
-        self.labelValues.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "Values", None, QtGui.QApplication.UnicodeUTF8))
         self.labelValues.setObjectName(_fromUtf8("labelValues"))
         self.gridLayout_2.addWidget(self.labelValues, 0, 4, 1, 1)
         self.btnGeom = QtGui.QPushButton(self.grpFields)
@@ -145,7 +137,6 @@ class Ui_FieldPyculatorDialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btnGeom.sizePolicy().hasHeightForWidth())
         self.btnGeom.setSizePolicy(sizePolicy)
-        self.btnGeom.setText(QtGui.QApplication.translate("FieldPyculatorDialog", "$geom", None, QtGui.QApplication.UnicodeUTF8))
         self.btnGeom.setObjectName(_fromUtf8("btnGeom"))
         self.gridLayout_2.addWidget(self.btnGeom, 3, 5, 1, 1)
         self.gridLayout.addWidget(self.grpFields, 7, 0, 1, 4)
@@ -163,6 +154,20 @@ class Ui_FieldPyculatorDialog(object):
         QtCore.QMetaObject.connectSlotsByName(FieldPyculatorDialog)
 
     def retranslateUi(self, FieldPyculatorDialog):
+        FieldPyculatorDialog.setWindowTitle(_translate("FieldPyculatorDialog", "FieldPyculator", None))
+        self.grpFieldExpression.setTitle(_translate("FieldPyculatorDialog", "Field expression", None))
+        self.btnRun.setText(_translate("FieldPyculatorDialog", "Run", None))
+        self.labelUpdateField.setText(_translate("FieldPyculatorDialog", "Update field:", None))
+        self.grpGlobalExpression.setTitle(_translate("FieldPyculatorDialog", "Global expression", None))
+        self.labelLayer.setText(_translate("FieldPyculatorDialog", "Layer:", None))
+        self.chkOnlySelected.setText(_translate("FieldPyculatorDialog", "Update only selected features", None))
+        self.lblLayerName.setText(_translate("FieldPyculatorDialog", "LayerName", None))
+        self.grpFields.setTitle(_translate("FieldPyculatorDialog", "Existing fields and vars", None))
+        self.btnGetAll.setText(_translate("FieldPyculatorDialog", "Get all", None))
+        self.btnId.setText(_translate("FieldPyculatorDialog", "$id", None))
+        self.labelFields.setText(_translate("FieldPyculatorDialog", "Fields", None))
         self.lstFields.setSortingEnabled(False)
+        self.labelValues.setText(_translate("FieldPyculatorDialog", "Values", None))
+        self.btnGeom.setText(_translate("FieldPyculatorDialog", "$geom", None))
 
 import resources_rc

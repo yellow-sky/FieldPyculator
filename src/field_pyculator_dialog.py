@@ -42,7 +42,6 @@ class FieldPyculatorDialog(QDialog):
         active_layer = iface.activeLayer()
         self.iface = iface
         self.active_layer_id = active_layer.id()
-        #self.data_provider = self.active_layer.dataProvider()
 
         #INIT CONTROLS VALUES
         self.ui.lblLayerName.setText(active_layer.name())
@@ -50,9 +49,6 @@ class FieldPyculatorDialog(QDialog):
         self.ui.lstFields.addItems(self.get_field_names(active_layer))
         self.ui.txtGlobalExp.hide()
         self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
-
-        #setup actions
-        self.ui.btnToggleEditing.setDefaultAction(self.iface.actionToggleEditing())
 
         #setup syntax highlight
         self.highlight_field = PythonHighlighter(self.ui.txtFieldExp.document())
@@ -68,9 +64,9 @@ class FieldPyculatorDialog(QDialog):
         QObject.connect(self.ui.lstFields, SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"), self.update_field_sample_values)
         QObject.connect(self.ui.lstFields, SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.add_field_to_expression)
         QObject.connect(self.ui.lstValues, SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.add_value_to_expression)
-        QObject.connect(self.ui.btnGetAll, SIGNAL(" clicked()"), self.update_field_all_values)
+        QObject.connect(self.ui.btnGetAll, SIGNAL("clicked()"), self.update_field_all_values)
         QObject.connect(self.ui.btnId, SIGNAL("clicked()"), self.add_id_to_expression)
-        QObject.connect(self.ui.btnGeom, SIGNAL(" clicked()"), self.add_geom_to_expression)
+        QObject.connect(self.ui.btnGeom, SIGNAL("clicked()"), self.add_geom_to_expression)
         QObject.connect(self.ui.btnRun, SIGNAL("clicked()"), self.processing)
         # TODO: add handler for tab replacing in txtFieldExp and txtGlobalExp
         # TODO: add handler for ctrl + scroll as font size selector in txtFieldExp and txtGlobalExp

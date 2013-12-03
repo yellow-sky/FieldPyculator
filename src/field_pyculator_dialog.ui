@@ -145,13 +145,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3" alignment="Qt::AlignRight">
-    <widget class="QToolButton" name="btnToggleEditing">
-     <property name="text">
-      <string>...</string>
-     </property>
-    </widget>
-   </item>
    <item row="7" column="0" colspan="4">
     <widget class="QGroupBox" name="grpFields">
      <property name="maximumSize">
