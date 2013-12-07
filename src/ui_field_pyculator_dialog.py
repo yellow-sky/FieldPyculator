@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './field_pyculator_dialog.ui'
 #
-# Created: Tue Dec  3 19:14:47 2013
+# Created: Sat Dec  7 16:44:43 2013
 #      by: PyQt4 UI code generator 4.10.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,6 +30,7 @@ class Ui_FieldPyculatorDialog(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/fieldpyculatorplugin/icon.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         FieldPyculatorDialog.setWindowIcon(icon)
+        FieldPyculatorDialog.setSizeGripEnabled(True)
         self.gridLayout = QtGui.QGridLayout(FieldPyculatorDialog)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.grpFieldExpression = QtGui.QGroupBox(FieldPyculatorDialog)
@@ -38,7 +39,7 @@ class Ui_FieldPyculatorDialog(object):
         self.grpFieldExpression.setObjectName(_fromUtf8("grpFieldExpression"))
         self.verticalLayout = QtGui.QVBoxLayout(self.grpFieldExpression)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.txtFieldExp = QtGui.QPlainTextEdit(self.grpFieldExpression)
+        self.txtFieldExp = SimplePythonEditBox(self.grpFieldExpression)
         self.txtFieldExp.setTabStopWidth(30)
         self.txtFieldExp.setObjectName(_fromUtf8("txtFieldExp"))
         self.verticalLayout.addWidget(self.txtFieldExp)
@@ -73,7 +74,7 @@ class Ui_FieldPyculatorDialog(object):
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.grpGlobalExpression)
         self.verticalLayout_2.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
-        self.txtGlobalExp = QtGui.QPlainTextEdit(self.grpGlobalExpression)
+        self.txtGlobalExp = SimplePythonEditBox(self.grpGlobalExpression)
         self.txtGlobalExp.setObjectName(_fromUtf8("txtGlobalExp"))
         self.verticalLayout_2.addWidget(self.txtGlobalExp)
         self.gridLayout.addWidget(self.grpGlobalExpression, 6, 0, 1, 4)
@@ -170,4 +171,5 @@ class Ui_FieldPyculatorDialog(object):
         self.labelValues.setText(_translate("FieldPyculatorDialog", "Values", None))
         self.btnGeom.setText(_translate("FieldPyculatorDialog", "$geom", None))
 
+from simple_python_edit_box import SimplePythonEditBox
 import resources_rc

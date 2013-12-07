@@ -20,14 +20,12 @@
 """
 import sys
 import datetime
-#import locale
 
-from PyQt4.QtGui import QDialog, QMessageBox, QFont
+from PyQt4.QtGui import QDialog, QMessageBox
 from PyQt4.QtCore import QObject, SIGNAL, Qt
 from qgis.core import QgsFeature, QgsRectangle, QgsMapLayerRegistry
  
 from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
-from syntax_highlighter import PythonHighlighter
 
 
 class FieldPyculatorDialog(QDialog):
@@ -50,10 +48,6 @@ class FieldPyculatorDialog(QDialog):
         self.ui.txtGlobalExp.hide()
         self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
 
-        #setup syntax highlight
-        self.highlight_field = PythonHighlighter(self.ui.txtFieldExp.document())
-        self.highlight_global = PythonHighlighter(self.ui.txtGlobalExp.document())
-
         #setup auto focus
         self.ui.lstFields.setFocusProxy(self.ui.txtFieldExp)
         self.ui.lstValues.setFocusProxy(self.ui.txtFieldExp)
@@ -68,20 +62,17 @@ class FieldPyculatorDialog(QDialog):
         QObject.connect(self.ui.btnId, SIGNAL("clicked()"), self.add_id_to_expression)
         QObject.connect(self.ui.btnGeom, SIGNAL("clicked()"), self.add_geom_to_expression)
         QObject.connect(self.ui.btnRun, SIGNAL("clicked()"), self.processing)
-        # TODO: add handler for tab replacing in txtFieldExp and txtGlobalExp
         # TODO: add handler for ctrl + scroll as font size selector in txtFieldExp and txtGlobalExp
         #QObject.connect(self.ui.txtFieldExp, SIGNAL("wheelEvent( QWheelEvent * )"), self.wheelEvent2)
 
     #---------------
     def wheelEvent(self, event):
-        delta = event.delta()/100
-        ctrl = event.modifiers() == Qt.ControlModifier
-        if ctrl:
-            font = self.ui.txtFieldExp.font()
-            if 5 < (font.pointSize() + delta) < 20:
-                new_font = QFont(font.family(), font.pointSize() + delta)
-                self.ui.txtFieldExp.setFont(new_font)
-                self.ui.txtGlobalExp.setFont(new_font)
+        if event.modifiers() == Qt.ControlModifier:
+            delta = event.delta()/100
+            font_size = self.ui.txtFieldExp.get_font_size()
+            if 5 < (font_size + delta) < 20:
+                self.ui.txtFieldExp.set_font_size(font_size + delta)
+                self.ui.txtGlobalExp.set_font_size(font_size + delta)
 
     def get_active_layer(self):
         #get and check layer
