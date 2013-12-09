@@ -22,7 +22,7 @@ import sys
 import datetime
 
 from PyQt4.QtGui import QDialog, QMessageBox
-from PyQt4.QtCore import QObject, SIGNAL, Qt
+from PyQt4.QtCore import QObject, SIGNAL, Qt, QSettings
 from qgis.core import QgsFeature, QgsRectangle, QgsMapLayerRegistry
  
 from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
@@ -40,6 +40,11 @@ class FieldPyculatorDialog(QDialog):
         active_layer = iface.activeLayer()
         self.iface = iface
         self.active_layer_id = active_layer.id()
+
+        #restore settings
+        rest_font_size = self.load_font_size(self.ui.txtFieldExp.get_font_size())
+        self.ui.txtFieldExp.set_font_size(rest_font_size)
+        self.ui.txtGlobalExp.set_font_size(rest_font_size)
 
         #INIT CONTROLS VALUES
         self.ui.lblLayerName.setText(active_layer.name())
@@ -62,17 +67,27 @@ class FieldPyculatorDialog(QDialog):
         QObject.connect(self.ui.btnId, SIGNAL("clicked()"), self.add_id_to_expression)
         QObject.connect(self.ui.btnGeom, SIGNAL("clicked()"), self.add_geom_to_expression)
         QObject.connect(self.ui.btnRun, SIGNAL("clicked()"), self.processing)
-        # TODO: add handler for ctrl + scroll as font size selector in txtFieldExp and txtGlobalExp
-        #QObject.connect(self.ui.txtFieldExp, SIGNAL("wheelEvent( QWheelEvent * )"), self.wheelEvent2)
+        QObject.connect(self.ui.txtFieldExp, SIGNAL("wheelEvent(QWheelEvent)"), self.editorWheelEvent)
+        QObject.connect(self.ui.txtGlobalExp, SIGNAL("wheelEvent(QWheelEvent)"), self.editorWheelEvent)
 
     #---------------
-    def wheelEvent(self, event):
+    def editorWheelEvent(self, event):
         if event.modifiers() == Qt.ControlModifier:
             delta = event.delta()/100
             font_size = self.ui.txtFieldExp.get_font_size()
-            if 5 < (font_size + delta) < 20:
-                self.ui.txtFieldExp.set_font_size(font_size + delta)
-                self.ui.txtGlobalExp.set_font_size(font_size + delta)
+            new_font_size = font_size + delta
+            if 5 < (new_font_size) < 20:
+                self.ui.txtFieldExp.set_font_size(new_font_size)
+                self.ui.txtGlobalExp.set_font_size(new_font_size)
+                self.save_font_size(new_font_size)
+
+    def save_font_size(self, new_font_size):
+        sett = QSettings()
+        sett.setValue('field_pyculator/font_size', new_font_size)
+
+    def load_font_size(self, def_value):
+        sett = QSettings()
+        return sett.value('field_pyculator/font_size', def_value).toInt()[0]
 
     def get_active_layer(self):
         #get and check layer

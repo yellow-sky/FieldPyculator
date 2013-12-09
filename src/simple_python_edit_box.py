@@ -18,6 +18,7 @@
  *                                                                         *
  ***************************************************************************/
 """
+from PyQt4.QtCore import SIGNAL, Qt
 from PyQt4.QtGui import QPlainTextEdit, QFont
 from syntax_highlighter import PythonHighlighter
 
@@ -39,3 +40,9 @@ class SimplePythonEditBox(QPlainTextEdit):
     def set_font_size(self, new_point_size):
         font = self.font()
         self.setFont(QFont(font.family(), new_point_size))
+
+    def wheelEvent(self, event):
+        if event.modifiers() == Qt.ControlModifier:
+            self.emit(SIGNAL("wheelEvent(QWheelEvent)"), event)
+        else:
+            super(SimplePythonEditBox, self).wheelEvent(event)
