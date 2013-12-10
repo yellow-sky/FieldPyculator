@@ -118,12 +118,12 @@ class FieldPyculatorDialog(QDialog):
         self.setCursor(Qt.WaitCursor)
         field_ind = data_provider.fieldNameIndex(field_name)
         field_type = data_provider.fields()[field_ind].typeName()
-        
+
         self.ui.lstValues.clear()
         values = data_provider.uniqueValues(field_ind, limit)
         for val in values:
             new_item = QListWidgetItem()
-            if field_type == 'String':
+            if field_type in ('String', 'Date'):
                 new_item.setText("'" + unicode(val.toString()) + "'")
                 new_item.setData(Qt.UserRole, "u'" + unicode(val.toString()) + "'")
             else:
