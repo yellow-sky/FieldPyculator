@@ -21,7 +21,7 @@
 import sys
 import datetime
 
-from PyQt4.QtGui import QDialog, QMessageBox
+from PyQt4.QtGui import QDialog, QMessageBox, QListWidgetItem
 from PyQt4.QtCore import QObject, SIGNAL, Qt, QSettings
 from qgis.core import QgsFeature, QgsRectangle, QgsMapLayerRegistry
  
@@ -122,10 +122,14 @@ class FieldPyculatorDialog(QDialog):
         self.ui.lstValues.clear()
         values = data_provider.uniqueValues(field_ind, limit)
         for val in values:
+            new_item = QListWidgetItem()
             if field_type == 'String':
-                self.ui.lstValues.addItem("'" + unicode(val.toString()) + "'")
+                new_item.setText("'" + unicode(val.toString()) + "'")
+                new_item.setData(Qt.UserRole, "u'" + unicode(val.toString()) + "'")
             else:
-                self.ui.lstValues.addItem(unicode(val.toString()))
+                new_item.setText(unicode(val.toString()))
+                new_item.setData(Qt.UserRole, unicode(val.toString()))
+            self.ui.lstValues.addItem(new_item)
         self.unsetCursor()
 
     def add_field_to_expression(self, item):
@@ -133,7 +137,7 @@ class FieldPyculatorDialog(QDialog):
         self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
 
     def add_value_to_expression(self, item):
-        value = item.text()
+        value = item.data(Qt.UserRole).toString()
         self.ui.txtFieldExp.insertPlainText(' '+value+' ')
     
     #------------- Vars handlers  ---------------------------------
