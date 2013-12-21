@@ -4,13 +4,22 @@
 name=FieldPyculator
 qgisMinimumVersion=1.7
 description=Use python power for calculate fields of vector layers 
-version=0.2.4
+version=0.2.5
 
 
 # Optional items:
-changelog: 0.2.4: French translation added
-    0.2.3: Russian translation added
-        Small bugs fixed
+changelog: 0.2.5:
+        * Font size in editors can be changed with ctrl+scroll
+        * Fix crash QGIS if layer was deleted from project
+        * Fix form logic? when active layer changed
+        * Tab size as 4 whitespace now
+        * Now for string always 'u' add
+        * For Date fields add ''
+    0.2.4:
+        * French translation added
+    0.2.3:
+        * Russian translation added
+        * Small bugs fixed
 
 tags=vector, calculator, python
 

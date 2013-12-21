@@ -30,7 +30,7 @@ def description():
 
 
 def version():
-    return "Version 0.2.4"
+    return "Version 0.2.5"
 
 
 def icon():
@@ -44,3 +44,11 @@ def qgisMinimumVersion():
 def classFactory(iface):
     from field_pyculator_plugin import FieldPyculatorPlugin
     return FieldPyculatorPlugin(iface)
+
+
+def author():
+    return "Nikulin Evgeniy"
+
+
+def email():
+    return "nikulin.e at gmail"
