@@ -20,7 +20,7 @@
 """
 from os import path
 # Import the PyQt and QGIS libraries
-from PyQt4.QtCore import QObject, SIGNAL, QCoreApplication,  QSettings, QLocale, QTranslator,  QVariant
+from PyQt4.QtCore import QObject, SIGNAL, QCoreApplication,  QSettings, QLocale, QTranslator
 from PyQt4.QtGui import QIcon, QAction
 from qgis.core import QgsMapLayer
 # Initialize Qt resources from file resources.py
@@ -37,43 +37,44 @@ class FieldPyculatorPlugin:
         # Save reference to the QGIS interface
         self.iface = iface
         # i18n support
-        override_locale = QSettings().value("locale/overrideFlag", QVariant(False)).toBool()
+        override_locale = QSettings().value('locale/overrideFlag', False, type=bool)
         if not override_locale:
             locale_full_name = QLocale.system().name()
         else:
-            locale_full_name = QSettings().value("locale/userLocale", QVariant("")).toString()
+            locale_full_name = QSettings().value('locale/userLocale', '', type=unicode)
 
-        self.locale_path = currentPath + "/i18n/field_pyculator_" + locale_full_name[0:2] + ".qm"
+        self.locale_path = currentPath + '/i18n/field_pyculator_' + locale_full_name[0:2] + '.qm'
         if path.exists(self.locale_path):
             self.translator = QTranslator()
             self.translator.load(self.locale_path)
             QCoreApplication.installTranslator(self.translator)
 
     def tr(self, text):
-        return QCoreApplication.translate("FieldPyculatorPlugin", text)
+        return QCoreApplication.translate('FieldPyculatorPlugin', text)
 
     def initGui(self):
         # Create action that will start plugin configuration
-        self.action = QAction(QIcon(":/plugins/fieldpyculatorplugin/icon.png"), self.tr("FieldPyculator"), self.iface.mainWindow())
+        self.action = QAction(QIcon(':/plugins/fieldpyculatorplugin/icon.png'),
+                              self.tr('FieldPyculator'), self.iface.mainWindow())
         # connect the action to the run method
-        QObject.connect(self.action, SIGNAL("triggered()"), self.run)
+        QObject.connect(self.action, SIGNAL('triggered()'), self.run)
 
         # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(self.tr("&FieldPyculator"), self.action)
+        self.iface.addPluginToMenu(self.tr('&FieldPyculator'), self.action)
 
         # track layer changing
-        QObject.connect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layer_changed)
+        QObject.connect(self.iface, SIGNAL('currentLayerChanged( QgsMapLayer* )'), self.layer_changed)
 
         # check already selected layers
         self.layer_changed()
 
     def unload(self):
         # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(self.tr("&FieldPyculator"), self.action)
+        self.iface.removePluginMenu(self.tr('&FieldPyculator'), self.action)
         self.iface.removeToolBarIcon(self.action)
         # Remove layer changing tracking
-        QObject.disconnect(self.iface, SIGNAL("currentLayerChanged( QgsMapLayer* )"), self.layer_changed)
+        QObject.disconnect(self.iface, SIGNAL('currentLayerChanged( QgsMapLayer* )'), self.layer_changed)
 
     def layer_changed(self):
         layer = self.iface.activeLayer()
@@ -88,6 +89,3 @@ class FieldPyculatorPlugin:
         # show the dialog
         dlg.show()
         result = dlg.exec_()
-        # See if OK was pressed
-        if result == 1:
-            pass

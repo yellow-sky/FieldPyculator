@@ -2,13 +2,15 @@
 
 [general]
 name=FieldPyculator
-qgisMinimumVersion=1.7
+qgisMinimumVersion=2.0
 description=Use python power for calculate fields of vector layers 
-version=0.2.5
+version=0.3.0
 
 
 # Optional items:
-changelog: 0.2.5:
+changelog: 0.3.0:
+        * Migrate to QGIS 2.x API
+    0.2.5:
         * Font size in editors can be changed with ctrl+scroll
         * Fix crash QGIS if layer was deleted from project
         * Fix form logic? when active layer changed

@@ -23,8 +23,8 @@ import datetime
 
 from PyQt4.QtGui import QDialog, QMessageBox, QListWidgetItem
 from PyQt4.QtCore import QObject, SIGNAL, Qt, QSettings
-from qgis.core import QgsFeature, QgsRectangle, QgsMapLayerRegistry
- 
+from qgis.core import QgsMapLayerRegistry, QgsFeatureRequest
+
 from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
 
 
@@ -51,7 +51,7 @@ class FieldPyculatorDialog(QDialog):
         self.ui.cmbUpdateField.addItems(self.get_field_names(active_layer))
         self.ui.lstFields.addItems(self.get_field_names(active_layer))
         self.ui.txtGlobalExp.hide()
-        self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')          
+        self.ui.txtFieldExp.insertPlainText(self.RESULT_VAR_NAME + ' = ')
 
         #setup auto focus
         self.ui.lstFields.setFocusProxy(self.ui.txtFieldExp)
@@ -60,15 +60,16 @@ class FieldPyculatorDialog(QDialog):
         self.ui.btnGeom.setFocusProxy(self.ui.txtFieldExp)
 
         #SIGNALS
-        QObject.connect(self.ui.lstFields, SIGNAL("currentItemChanged ( QListWidgetItem * , QListWidgetItem * )"), self.update_field_sample_values)
-        QObject.connect(self.ui.lstFields, SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.add_field_to_expression)
-        QObject.connect(self.ui.lstValues, SIGNAL("itemDoubleClicked(QListWidgetItem *)"), self.add_value_to_expression)
-        QObject.connect(self.ui.btnGetAll, SIGNAL("clicked()"), self.update_field_all_values)
-        QObject.connect(self.ui.btnId, SIGNAL("clicked()"), self.add_id_to_expression)
-        QObject.connect(self.ui.btnGeom, SIGNAL("clicked()"), self.add_geom_to_expression)
-        QObject.connect(self.ui.btnRun, SIGNAL("clicked()"), self.processing)
-        QObject.connect(self.ui.txtFieldExp, SIGNAL("wheelEvent(QWheelEvent)"), self.editorWheelEvent)
-        QObject.connect(self.ui.txtGlobalExp, SIGNAL("wheelEvent(QWheelEvent)"), self.editorWheelEvent)
+        QObject.connect(self.ui.lstFields, SIGNAL('currentItemChanged ( QListWidgetItem * , QListWidgetItem * )'),
+                        self.update_field_sample_values)
+        QObject.connect(self.ui.lstFields, SIGNAL('itemDoubleClicked(QListWidgetItem *)'), self.add_field_to_expression)
+        QObject.connect(self.ui.lstValues, SIGNAL('itemDoubleClicked(QListWidgetItem *)'), self.add_value_to_expression)
+        QObject.connect(self.ui.btnGetAll, SIGNAL('clicked()'), self.update_field_all_values)
+        QObject.connect(self.ui.btnId, SIGNAL('clicked()'), self.add_id_to_expression)
+        QObject.connect(self.ui.btnGeom, SIGNAL('clicked()'), self.add_geom_to_expression)
+        QObject.connect(self.ui.btnRun, SIGNAL('clicked()'), self.processing)
+        QObject.connect(self.ui.txtFieldExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
+        QObject.connect(self.ui.txtGlobalExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
 
     #---------------
     def editorWheelEvent(self, event):
@@ -87,14 +88,14 @@ class FieldPyculatorDialog(QDialog):
 
     def load_font_size(self, def_value):
         sett = QSettings()
-        return sett.value('field_pyculator/font_size', def_value).toInt()[0]
+        return sett.value('field_pyculator/font_size', def_value, type=int)
 
     def get_active_layer(self):
         #get and check layer
         active_layer = QgsMapLayerRegistry.instance().mapLayer(self.active_layer_id)
         if not active_layer:
-            QMessageBox.critical(self, self.tr("FieldPyculator error"),
-                                 self.tr("Layer was not found! It could be removed!"))
+            QMessageBox.critical(self, self.tr('FieldPyculator error'),
+                                 self.tr('Layer was not found! It could be removed!'))
             return None
         else:
             return active_layer
@@ -124,11 +125,12 @@ class FieldPyculatorDialog(QDialog):
         for val in values:
             new_item = QListWidgetItem()
             if field_type in ('String', 'Date'):
-                new_item.setText("'" + unicode(val.toString()) + "'")
-                new_item.setData(Qt.UserRole, "u'" + unicode(val.toString()) + "'")
+                new_item.setText("'" + unicode(val) + "'")
+                new_item.setData(Qt.UserRole, "u'" + unicode(val) + "'")
             else:
-                new_item.setText(unicode(val.toString()))
-                new_item.setData(Qt.UserRole, unicode(val.toString()))
+                #TODO: is too long!!!
+                new_item.setText(unicode(val))
+                new_item.setData(Qt.UserRole, unicode(val))
             self.ui.lstValues.addItem(new_item)
         self.unsetCursor()
 
@@ -137,13 +139,13 @@ class FieldPyculatorDialog(QDialog):
         self.ui.txtFieldExp.insertPlainText(' <'+field_name+'> ')
 
     def add_value_to_expression(self, item):
-        value = item.data(Qt.UserRole).toString()
+        value = item.data(Qt.UserRole)
         self.ui.txtFieldExp.insertPlainText(' '+value+' ')
-    
+
     #------------- Vars handlers  ---------------------------------
     def add_id_to_expression(self):
         self.ui.txtFieldExp.insertPlainText(' $id ')
-        
+
     def add_geom_to_expression(self):
         self.ui.txtFieldExp.insertPlainText(' $geom ')
     #--------------------------------------------------------------
@@ -158,13 +160,13 @@ class FieldPyculatorDialog(QDialog):
 
         #check edit mode
         if not active_layer.isEditable():
-            QMessageBox.warning(self, self.tr("FieldPyculator warning"),
-                                 self.tr("Layer is not in edit mode! Please start editing the layer!"))
-            return    
-        
+            QMessageBox.warning(self, self.tr('FieldPyculator warning'),
+                                self.tr('Layer is not in edit mode! Please start editing the layer!'))
+            return
+
         start = datetime.datetime.now()
         new_ns = {}
-        
+
         #run global code
         if self.ui.grpGlobalExpression.isChecked():
             try:
@@ -172,22 +174,21 @@ class FieldPyculatorDialog(QDialog):
                 bytecode = compile(code, '<string>', 'exec')
                 exec bytecode in new_ns
             except:
-                QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            (self.tr("Global code block can't be executed!\n%1: %2"))
-                            .arg(unicode(sys.exc_info()[0].__name__))
-                            .arg(unicode(sys.exc_info()[1])))
+                QMessageBox.critical(self, self.tr('FieldPyculator code execute error'),
+                                    (self.tr('Global code block can\'t be executed!\n{0}: {1}'))
+                                    .format(unicode(sys.exc_info()[0].__name__), unicode(sys.exc_info()[1])))
                 return
 
         code = unicode(self.ui.txtFieldExp.toPlainText())
-        
+
         #TODO: check 'result' existing in text of code???!!!
-            
+
         #replace all fields tags
         field_map = data_provider.fields()
-        for num, field in field_map.iteritems():
+        for field in field_map:
             field_name = unicode(field.name())
-            replval = '__attr[' + str(num) + ']'
-            code = code.replace("<"+field_name+">", replval)
+            replval = '__attr[\'' + field_name + '\']'
+            code = code.replace('<' +field_name+ '>', replval)
 
         #replace all special vars
         code = code.replace('$id', '__id')
@@ -197,154 +198,94 @@ class FieldPyculatorDialog(QDialog):
         #print code #debug
 
         #search needed vars (hmmm... comments?!)
-        need_id = code.find("__id") != -1
-        need_geom = code.find("__geom") != -1
-        need_attrs = code.find("__attr") != -1
+        need_id = code.find('__id') != -1
+        need_geom = code.find('__geom') != -1
+        need_attrs = code.find('__attr') != -1
 
         #compile
         try:
             bytecode = compile(code, '<string>', 'exec')
         except:
-            QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                                 self.tr("Field code block can't be executed!\n%1: %2")
-                                 .arg(unicode(sys.exc_info()[0].__name__))
-                                 .arg(unicode(sys.exc_info()[1])))
+            QMessageBox.critical(self, self.tr('FieldPyculator code execute error'),
+                                (self.tr('Field code block can\'t be executed!\n{0}: {1}'))
+                                .format(unicode(sys.exc_info()[0].__name__), unicode(sys.exc_info()[1])))
             return
 
         #get num of updating field
         field_num = data_provider.fieldNameIndex(self.ui.cmbUpdateField.currentText())
-        
+
         #setup progress bar       
         self.ui.prgTotal.setValue(0)
-        
+
         #run
         if not self.ui.chkOnlySelected.isChecked():
-            #select all features
             features_for_update = data_provider.featureCount()
-            if features_for_update > 0:
-                self.ui.prgTotal.setMaximum(features_for_update)
-            
-            feat = QgsFeature()
+            request = QgsFeatureRequest()
+            if not need_geom:
+                request.setFlags(QgsFeatureRequest.NoGeometry)
             if need_attrs:
-                attr_ind = data_provider.attributeIndexes()
+                request.setSubsetOfAttributes(data_provider.attributeIndexes())
             else:
-                attr_ind = []
-            data_provider.select(attr_ind, QgsRectangle(), need_geom)
-            
-            while data_provider.nextFeature(feat):
-                feat_id = feat.id()
-                
-                #add needed vars
-                if need_id:
-                    new_ns['__id'] = feat_id
-
-                if need_geom:
-                    geom = feat.geometry()
-                    new_ns['__geom'] = geom
-
-                if need_attrs:
-                    attr_map = feat.attributeMap()
-                    attr = []
-                    for num, a in attr_map.iteritems():
-                        attr.append(self.qvar2py(a))
-                    new_ns['__attr'] = attr
-                
-                #clear old result
-                if self.RESULT_VAR_NAME in new_ns:
-                    del new_ns[self.RESULT_VAR_NAME]
-                
-                #exec
-                try:
-                    exec bytecode in new_ns
-                except:
-                    QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Field code block can't be executed for feature %3!\n%1: %2")
-                            .arg(unicode(sys.exc_info()[0].__name__))
-                            .arg(unicode(sys.exc_info()[1]))
-                            .arg(unicode(feat_id)))
-                    return
-                
-                #check result
-                if not self.RESULT_VAR_NAME in new_ns:
-                    QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Field code block does not return '%1' variable! Please declare this variable in your code!")
-                            .arg(self.RESULT_VAR_NAME))
-                    return
-                
-                #try assign
-                try:
-                    active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
-                except:
-                    QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Result value can't be assigned to the feature %3!\n%1: %2")
-                            .arg(unicode(sys.exc_info()[0].__name__))
-                            .arg(unicode(sys.exc_info()[1]))
-                            .arg(unicode(feat_id)))
-                    return
-
-                self.ui.prgTotal.setValue(self.ui.prgTotal.value()+1)
-
+                request.setSubsetOfAttributes([])
+            features = active_layer.getFeatures(request)
         else:
-            #only selected (TODO: NEED REFACTORING - copy-past!!!)
             features_for_update = active_layer.selectedFeatureCount()
-            if features_for_update > 0:
-                self.ui.prgTotal.setMaximum(features_for_update)
+            features = active_layer.selectedFeatures()
 
-            for feat in active_layer.selectedFeatures():
-                feat_id = feat.id()
+        if features_for_update > 0:
+            self.ui.prgTotal.setMaximum(features_for_update)
 
-                #add needed vars
-                if need_id:
-                    new_ns['__id'] = feat_id
+        for feat in features:
+            feat_id = feat.id()
+            #add needed vars
+            if need_id:
+                new_ns['__id'] = feat_id
+            if need_geom:
+                geom = feat.geometry()
+                new_ns['__geom'] = geom
+            if need_attrs:
+                fields = feat.fields()
+                attr = {}
+                for a in fields:
+                    attr[a.name()] = feat[a.name()]
+                new_ns['__attr'] = attr
 
-                if need_geom:
-                    geom = feat.geometry()
-                    new_ns['__geom'] = geom
+            #clear old result
+            if self.RESULT_VAR_NAME in new_ns:
+                del new_ns[self.RESULT_VAR_NAME]
 
-                if need_attrs:
-                    attr_map = feat.attributeMap()
-                    attr = []
-                    for num, a in attr_map.iteritems():
-                        attr.append(self.qvar2py(a))
-                    new_ns['__attr'] = attr
+            #exec
+            try:
+                exec bytecode in new_ns
+            except:
+                QMessageBox.critical(self, self.tr('FieldPyculator code execute error'),
+                                     self.tr('Field code block can\'t be executed for feature {2}!\n{0}: {1}')
+                                     .format(unicode(sys.exc_info()[0].__name__),
+                                             unicode(sys.exc_info()[1]),
+                                             unicode(feat_id)))
+                return
 
-                #clear old result
-                if new_ns.has_key(self.RESULT_VAR_NAME):
-                    del new_ns[self.RESULT_VAR_NAME]
+            #check result
+            if not self.RESULT_VAR_NAME in new_ns:
+                QMessageBox.critical(self, self.tr('FieldPyculator code execute error'),
+                        self.tr('Field code block does not return \'{0}\' variable! Please declare this variable in your code!')
+                        .format(self.RESULT_VAR_NAME))
+                return
 
-                #exec
-                try:
-                    exec bytecode in new_ns
-                except:
-                    QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Field code block can't be executed for feature %3!\n%1: %2")
-                            .arg(unicode(sys.exc_info()[0].__name__))
-                            .arg(unicode(sys.exc_info()[1]))
-                            .arg(unicode(feat_id)))
-                    return
+            #try assign
+            try:
+                active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
+            except:
+                QMessageBox.critical(self, self.tr('FieldPyculator code execute error'),
+                                     self.tr('Result value can\'t be assigned to the feature {2}!\n{0}: {1}')
+                                     .format(unicode(sys.exc_info()[0].__name__),
+                                             unicode(sys.exc_info()[1]),
+                                             unicode(feat_id)))
+                return
 
-                #check result
-                if not self.RESULT_VAR_NAME in new_ns:
-                    QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Field code block does not return '%1' variable! Please declare this variable in your code!")
-                            .arg(self.RESULT_VAR_NAME))
-                    return
-
-                #try assign
-                try:
-                    active_layer.changeAttributeValue(feat_id, field_num, new_ns[self.RESULT_VAR_NAME])
-                except:
-                    QMessageBox.critical(self, self.tr("FieldPyculator code execute error"),
-                            self.tr("Result value can't be assigned to the feature %3!\n%1: %2")
-                            .arg(unicode(sys.exc_info()[0].__name__))
-                            .arg(unicode(sys.exc_info()[1]))
-                            .arg(unicode(feat_id)))
-                    return
-
-                self.ui.prgTotal.setValue(self.ui.prgTotal.value()+1)
+            self.ui.prgTotal.setValue(self.ui.prgTotal.value()+1)
 
         stop = datetime.datetime.now()
-
         #workaround for python < 2.7
         td = stop - start
         if sys.version_info[:2] < (2, 7):
@@ -352,26 +293,14 @@ class FieldPyculatorDialog(QDialog):
         else:
             total_sec = td.total_seconds()
 
-        QMessageBox.information(self, self.tr("FieldPyculator code executed successfully"),
-                         self.tr("Updated %1 features for %2 seconds")
-                            .arg(unicode(features_for_update))
-                            .arg(unicode(total_sec))
-                         )
-
-    @staticmethod
-    def qvar2py(qv):
-        if qv.type() == 2:
-            return qv.toInt()[0]
-        if qv.type() == 10:
-            return unicode(qv.toString())
-        if qv.type() == 6:
-            return qv.toDouble()[0]
-        return None
+        QMessageBox.information(self, self.tr('FieldPyculator code executed successfully'),
+                                (self.tr('Updated {0} features for {1} seconds'))
+                                .format(unicode(features_for_update), unicode(total_sec)))
 
     @staticmethod
     def get_field_names(layer):
         field_map = layer.dataProvider().fields()
         field_list = []
-        for num, field in field_map.iteritems():
+        for field in field_map:
             field_list.append(unicode(field.name()))
         return field_list  # sorted( field_list, cmp=locale.strcoll )
