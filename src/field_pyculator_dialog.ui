@@ -34,11 +34,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="PythonEditBox" name="txtFieldExp">
-        <property name="tabStopWidth">
-         <number>30</number>
-        </property>
-       </widget>
+       <widget class="PythonEditBox" name="txtFieldExp"/>
       </item>
      </layout>
     </widget>

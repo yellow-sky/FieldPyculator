@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './field_pyculator_dialog.ui'
 #
-# Created: Mon Jan  6 00:55:26 2014
+# Created: Mon Jan  6 14:51:39 2014
 #      by: PyQt4 UI code generator 4.10.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -40,7 +40,6 @@ class Ui_FieldPyculatorDialog(object):
         self.verticalLayout = QtGui.QVBoxLayout(self.grpFieldExpression)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.txtFieldExp = PythonEditBox(self.grpFieldExpression)
-        self.txtFieldExp.setTabStopWidth(30)
         self.txtFieldExp.setObjectName(_fromUtf8("txtFieldExp"))
         self.verticalLayout.addWidget(self.txtFieldExp)
         self.gridLayout.addWidget(self.grpFieldExpression, 8, 0, 1, 4)

@@ -91,10 +91,6 @@ class ScintillaPythonEditBox(QsciScintilla, BasePythonEditBox):
         self.setCaretLineVisible(True)
         self.setCaretLineBackgroundColor(QColor('#d3d7cf'))
 
-        # Folding
-        self.setFolding(QsciScintilla.BoxedTreeFoldStyle)
-        self.setFoldMarginColors(QColor('#d3d7cf'), QColor('#d3d7cf'))
-
         # Mark column 80 with vertical line
         self.setEdgeMode(QsciScintilla.EdgeLine)
         self.setEdgeColumn(80)
@@ -192,6 +188,8 @@ class ScintillaPythonEditBox(QsciScintilla, BasePythonEditBox):
     #impliment base editor
     def insertPlainText(self, text):
         self.insert(text)
+        pos = self.getCursorPosition()
+        self.setCursorPosition(pos[0], pos[1]+len(text))
 
     def toPlainText(self):
         return self.text()
@@ -208,7 +206,3 @@ class ScintillaPythonEditBox(QsciScintilla, BasePythonEditBox):
             self.emit(SIGNAL("wheelEvent(QWheelEvent)"), event)
         else:
             super(ScintillaPythonEditBox, self).wheelEvent(event)
-
-    #ui designer workaround
-    def setTabStopWidth(self, int):
-        pass
