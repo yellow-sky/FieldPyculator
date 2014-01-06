@@ -18,31 +18,26 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import SIGNAL, Qt
-from PyQt4.QtGui import QPlainTextEdit, QFont
-from syntax_highlighter import PythonHighlighter
-from base_python_edit_box import BasePythonEditBox
+#from PyQt4 import Qt
+#from PyQt4.QtCore import SIGNAL
 
-class SimplePythonEditBox(QPlainTextEdit, BasePythonEditBox):
-    def __init__(self, *__args):
-        QPlainTextEdit.__init__(self, *__args)
-        self.set_tab_size()
-        self.highlight = PythonHighlighter(self.document())
 
-    def set_tab_size(self):
-        tab_stop = 4
-        metrics = self.fontMetrics()
-        self.setTabStopWidth(tab_stop * metrics.width(' '))
+class BasePythonEditBox():
+    def __init__(self):
+        pass
 
     def get_font_size(self):
-        return self.font().pointSize()
+        raise NotImplementedError()
 
     def set_font_size(self, new_point_size):
-        font = self.font()
-        self.setFont(QFont(font.family(), new_point_size))
+        raise NotImplementedError()
 
-    def wheelEvent(self, event):
-        if event.modifiers() == Qt.ControlModifier:
-            self.emit(SIGNAL("wheelEvent(QWheelEvent)"), event)
-        else:
-            super(SimplePythonEditBox, self).wheelEvent(event)
+    def insertPlainText(self, text):
+        raise NotImplementedError()
+
+    def toPlainText(self):
+        raise NotImplementedError()
+
+    #def wheelEvent(self, event):
+        #self.emit(SIGNAL("wheelEvent(QWheelEvent)"), event)
+        #raise NotImplementedError()

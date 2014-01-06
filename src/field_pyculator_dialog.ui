@@ -34,7 +34,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="SimplePythonEditBox" name="txtFieldExp">
+       <widget class="PythonEditBox" name="txtFieldExp">
         <property name="tabStopWidth">
          <number>30</number>
         </property>
@@ -104,7 +104,7 @@
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
-       <widget class="SimplePythonEditBox" name="txtGlobalExp"/>
+       <widget class="PythonEditBox" name="txtGlobalExp"/>
       </item>
      </layout>
     </widget>
@@ -253,9 +253,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SimplePythonEditBox</class>
+   <class>PythonEditBox</class>
    <extends>QPlainTextEdit</extends>
-   <header>simple_python_edit_box</header>
+   <header>python_edit_box_factory</header>
   </customwidget>
  </customwidgets>
  <resources>

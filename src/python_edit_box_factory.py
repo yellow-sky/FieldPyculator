@@ -18,31 +18,11 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt4.QtCore import SIGNAL, Qt
-from PyQt4.QtGui import QPlainTextEdit, QFont
-from syntax_highlighter import PythonHighlighter
-from base_python_edit_box import BasePythonEditBox
 
-class SimplePythonEditBox(QPlainTextEdit, BasePythonEditBox):
-    def __init__(self, *__args):
-        QPlainTextEdit.__init__(self, *__args)
-        self.set_tab_size()
-        self.highlight = PythonHighlighter(self.document())
-
-    def set_tab_size(self):
-        tab_stop = 4
-        metrics = self.fontMetrics()
-        self.setTabStopWidth(tab_stop * metrics.width(' '))
-
-    def get_font_size(self):
-        return self.font().pointSize()
-
-    def set_font_size(self, new_point_size):
-        font = self.font()
-        self.setFont(QFont(font.family(), new_point_size))
-
-    def wheelEvent(self, event):
-        if event.modifiers() == Qt.ControlModifier:
-            self.emit(SIGNAL("wheelEvent(QWheelEvent)"), event)
-        else:
-            super(SimplePythonEditBox, self).wheelEvent(event)
+try:
+    from PyQt4.Qsci import QsciScintilla, QsciLexerPython, QsciAPIs
+    from scintilla_python_edit_box import ScintillaPythonEditBox
+    PythonEditBox = ScintillaPythonEditBox
+except:
+    from simple_python_edit_box import SimplePythonEditBox
+    PythonEditBox = SimplePythonEditBox

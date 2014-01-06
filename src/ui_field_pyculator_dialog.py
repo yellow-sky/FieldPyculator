@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file './field_pyculator_dialog.ui'
 #
-# Created: Sat Dec  7 16:44:43 2013
+# Created: Mon Jan  6 00:55:26 2014
 #      by: PyQt4 UI code generator 4.10.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -39,7 +39,7 @@ class Ui_FieldPyculatorDialog(object):
         self.grpFieldExpression.setObjectName(_fromUtf8("grpFieldExpression"))
         self.verticalLayout = QtGui.QVBoxLayout(self.grpFieldExpression)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.txtFieldExp = SimplePythonEditBox(self.grpFieldExpression)
+        self.txtFieldExp = PythonEditBox(self.grpFieldExpression)
         self.txtFieldExp.setTabStopWidth(30)
         self.txtFieldExp.setObjectName(_fromUtf8("txtFieldExp"))
         self.verticalLayout.addWidget(self.txtFieldExp)
@@ -74,7 +74,7 @@ class Ui_FieldPyculatorDialog(object):
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.grpGlobalExpression)
         self.verticalLayout_2.setSizeConstraint(QtGui.QLayout.SetDefaultConstraint)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
-        self.txtGlobalExp = SimplePythonEditBox(self.grpGlobalExpression)
+        self.txtGlobalExp = PythonEditBox(self.grpGlobalExpression)
         self.txtGlobalExp.setObjectName(_fromUtf8("txtGlobalExp"))
         self.verticalLayout_2.addWidget(self.txtGlobalExp)
         self.gridLayout.addWidget(self.grpGlobalExpression, 6, 0, 1, 4)
@@ -171,5 +171,5 @@ class Ui_FieldPyculatorDialog(object):
         self.labelValues.setText(_translate("FieldPyculatorDialog", "Values", None))
         self.btnGeom.setText(_translate("FieldPyculatorDialog", "$geom", None))
 
-from simple_python_edit_box import SimplePythonEditBox
+from python_edit_box_factory import PythonEditBox
 import resources_rc
