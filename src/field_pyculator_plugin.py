@@ -85,7 +85,7 @@ class FieldPyculatorPlugin:
 
     def run(self):
         # create and show the dialog
-        dlg = FieldPyculatorDialog(self.iface)
+        self.dlg = FieldPyculatorDialog(self.iface)
         # show the dialog
-        dlg.show()
-        result = dlg.exec_()
+        self.dlg.show()
+        #result = dlg.exec_()

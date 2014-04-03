@@ -21,18 +21,18 @@
 import sys
 import datetime
 
-from PyQt4.QtGui import QDialog, QMessageBox, QListWidgetItem
+from PyQt4.QtGui import QMainWindow, QMessageBox, QListWidgetItem
 from PyQt4.QtCore import QObject, SIGNAL, Qt, QSettings
-from qgis.core import QgsMapLayerRegistry, QgsFeatureRequest
+from qgis.core import QgsMapLayerRegistry, QgsFeatureRequest, QgsApplication
 
 from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
 
 
-class FieldPyculatorDialog(QDialog):
+class FieldPyculatorDialog(QMainWindow):
     RESULT_VAR_NAME = 'value'
 
     def __init__(self, iface):
-        QDialog.__init__(self)
+        QMainWindow.__init__(self)
         # Set up the user interface from Designer.
         self.ui = Ui_FieldPyculatorDialog()
         self.ui.setupUi(self)
@@ -59,6 +59,10 @@ class FieldPyculatorDialog(QDialog):
         self.ui.btnId.setFocusProxy(self.ui.txtFieldExp)
         self.ui.btnGeom.setFocusProxy(self.ui.txtFieldExp)
 
+        #setup icons
+        self.init_toolbox()
+        self.ui.btnRun.setIcon(QgsApplication.getThemeIcon('console/iconRunScriptConsole.png'))
+
         #SIGNALS
         QObject.connect(self.ui.lstFields, SIGNAL('currentItemChanged ( QListWidgetItem * , QListWidgetItem * )'),
                         self.update_field_sample_values)
@@ -70,6 +74,16 @@ class FieldPyculatorDialog(QDialog):
         QObject.connect(self.ui.btnRun, SIGNAL('clicked()'), self.processing)
         QObject.connect(self.ui.txtFieldExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
         QObject.connect(self.ui.txtGlobalExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
+
+    #-------------- GUI INIT
+
+    def init_toolbox(self):
+        icon = QgsApplication.getThemeIcon('console/iconOpenConsole.png') or QgsApplication.getThemeIcon('/mActionFileOpen.svg')
+        self.ui.action_open.setIcon(icon)
+        icon = QgsApplication.getThemeIcon('console/iconSaveConsole.png') or QgsApplication.getThemeIcon('/mActionFileSave.svg')
+        self.ui.action_save.setIcon(icon)
+        icon = QgsApplication.getThemeIcon('console/iconSaveAsConsole.png') or QgsApplication.getThemeIcon('/mActionFileSaveAs.svg')
+        self.ui.action_save_as.setIcon(icon)
 
     #---------------
     def editorWheelEvent(self, event):
