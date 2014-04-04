@@ -28,30 +28,31 @@ class CodeComposer():
     """
 
     _linesep = '\n'
-    _header = '#<QGIS FieldPyculator file>'
+    _header = '# <QGIS FieldPyculator file>'
     _global_separator = '# <Global code>'
     _local_separator = '# <Local code>'
 
     @staticmethod
-    def compose(self, global_code, local_code):
-        content = '{h}{sep}{gs}{gc}{sep}{ls}{lc}'.format(h=self._header,
-                                                         gs=self._global_separator,
+    def compose(global_code, local_code):
+        content = '{h}{sep}{gs}{nl}{gc}{sep}{ls}{nl}{lc}'.format(h=CodeComposer._header,
+                                                         gs=CodeComposer._global_separator,
                                                          gc=global_code,
-                                                         ls=self._local_separator,
+                                                         ls=CodeComposer._local_separator,
                                                          lc=local_code,
-                                                         sep=self._linesep*3)
+                                                         sep=CodeComposer._linesep*3,
+                                                         nl=CodeComposer._linesep)
         return content
 
     @staticmethod
-    def decompose(self, content):
+    def decompose(content):
         global_code = ''
         local_code = ''
 
-        if self._header not in content or self._global_separator not in content or self._local_separator not in content:
-            QgsMessageLog.logMessage('FieldPyculator: File does not look like a FieldPyculator code! Try to load as plain code...', QgsMessageLog.WARNING)
-        content.replace(self._header, '')
+        if CodeComposer._header not in content or CodeComposer._global_separator not in content or CodeComposer._local_separator not in content:
+            QgsMessageLog.logMessage('FieldPyculator: File does not look like a FieldPyculator code! Try to load as plain code...', level=QgsMessageLog.WARNING)
+        content = content.replace(CodeComposer._header, '')
 
-        blocks = str.split(self._local_separator, maxsplit=1)
+        blocks = content.split(CodeComposer._local_separator, 1)
 
         if len(blocks) == 1:
             local_code = blocks[0]
@@ -59,7 +60,7 @@ class CodeComposer():
             global_code = blocks[0]
             local_code = blocks[1]
 
-        global_code.replace(self._global_separator, '')
-        local_code.replace(self._local_separator, '')  # overhead
+        global_code = global_code.replace(CodeComposer._global_separator, '').strip()
+        local_code =  local_code.replace(CodeComposer._local_separator, '').strip()  # overhead
 
         return global_code, local_code

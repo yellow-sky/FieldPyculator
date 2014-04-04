@@ -20,16 +20,20 @@
 """
 import sys
 import datetime
+from os import path
 
-from PyQt4.QtGui import QMainWindow, QMessageBox, QListWidgetItem
+from PyQt4.QtGui import QMainWindow, QMessageBox, QListWidgetItem, QFileDialog
 from PyQt4.QtCore import QObject, SIGNAL, Qt, QSettings
 from qgis.core import QgsMapLayerRegistry, QgsFeatureRequest, QgsApplication
 
 from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
 
+from code_composer import CodeComposer
 
 class FieldPyculatorDialog(QMainWindow):
     RESULT_VAR_NAME = 'value'
+
+    _filter = 'Pyculator files (*.pycl);; Python files (*.py);; All files (*)'
 
     def __init__(self, iface):
         QMainWindow.__init__(self)
@@ -74,6 +78,8 @@ class FieldPyculatorDialog(QMainWindow):
         QObject.connect(self.ui.btnRun, SIGNAL('clicked()'), self.processing)
         QObject.connect(self.ui.txtFieldExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
         QObject.connect(self.ui.txtGlobalExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
+        QObject.connect(self.ui.action_open, SIGNAL('triggered(bool)'), self.action_open_handler)
+        QObject.connect(self.ui.action_save_as, SIGNAL('triggered(bool)'), self.action_save_as_handler)
 
     #-------------- GUI INIT
 
@@ -86,6 +92,7 @@ class FieldPyculatorDialog(QMainWindow):
         self.ui.action_save_as.setIcon(icon)
 
     #---------------
+
     def editorWheelEvent(self, event):
         if event.modifiers() == Qt.ControlModifier:
             delta = event.delta()/100
@@ -113,6 +120,31 @@ class FieldPyculatorDialog(QMainWindow):
             return None
         else:
             return active_layer
+
+    #--------------- Open/Save handlers -----------------------
+    def action_open_handler(self):
+        file_name = QFileDialog.getOpenFileName(self, self.tr('Open file with code...'), filter=self._filter)
+        if file_name:
+            if path.exists(file_name):
+                with open(file_name) as content_file:
+                    content = content_file.read()
+                glob_code, local_code = CodeComposer.decompose(content)
+                self.ui.txtGlobalExp.setText(glob_code)
+                self.ui.txtFieldExp.setText(local_code)
+                if glob_code:
+                    self.ui.grpGlobalExpression.setChecked(True)
+                else:
+                    self.ui.grpGlobalExpression.setChecked(False)
+            else:
+                QMessageBox.warning(self, self.tr('FieldPyculator warning'), self.tr('No such file: ') + file_name)
+
+    def action_save_as_handler(self):
+        file_name = QFileDialog.getSaveFileName(self, self.tr('Save code to file...'), filter=self._filter)
+        if file_name:
+            content = CodeComposer.compose(self.ui.txtGlobalExp.toPlainText(), self.ui.txtFieldExp.toPlainText())
+            with open(file_name, 'w') as content_file:
+                content_file.write(content)
+
 
     #--------------- Fields handlers ---------------------------
     def update_field_sample_values(self, new_item, old_item):
