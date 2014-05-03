@@ -30,6 +30,7 @@ from ui_field_pyculator_dialog import Ui_FieldPyculatorDialog
 
 from code_composer import CodeComposer
 
+
 class FieldPyculatorDialog(QMainWindow):
     RESULT_VAR_NAME = 'value'
 
@@ -44,6 +45,9 @@ class FieldPyculatorDialog(QMainWindow):
         active_layer = iface.activeLayer()
         self.iface = iface
         self.active_layer_id = active_layer.id()
+
+        self._code_from_file = None
+        self._is_dirty = False
 
         #restore settings
         rest_font_size = self.load_font_size(self.ui.txtFieldExp.get_font_size())
@@ -79,7 +83,10 @@ class FieldPyculatorDialog(QMainWindow):
         QObject.connect(self.ui.txtFieldExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
         QObject.connect(self.ui.txtGlobalExp, SIGNAL('wheelEvent(QWheelEvent)'), self.editorWheelEvent)
         QObject.connect(self.ui.action_open, SIGNAL('triggered(bool)'), self.action_open_handler)
+        QObject.connect(self.ui.action_save, SIGNAL('triggered(bool)'), self.action_save_handler)
         QObject.connect(self.ui.action_save_as, SIGNAL('triggered(bool)'), self.action_save_as_handler)
+        QObject.connect(self.ui.txtGlobalExp, SIGNAL('textChanged()'), self.set_dirty_flag)
+        QObject.connect(self.ui.txtFieldExp, SIGNAL('textChanged()'), self.set_dirty_flag)
 
     #-------------- GUI INIT
 
@@ -90,6 +97,7 @@ class FieldPyculatorDialog(QMainWindow):
         self.ui.action_save.setIcon(icon)
         icon = QgsApplication.getThemeIcon('console/iconSaveAsConsole.png') or QgsApplication.getThemeIcon('/mActionFileSaveAs.svg')
         self.ui.action_save_as.setIcon(icon)
+        self.update_btn_status()
 
     #---------------
 
@@ -123,6 +131,7 @@ class FieldPyculatorDialog(QMainWindow):
 
     #--------------- Open/Save handlers -----------------------
     def action_open_handler(self):
+        #TODO: Add _is_dirty flag check
         file_name = QFileDialog.getOpenFileName(self, self.tr('Open file with code...'), filter=self._filter)
         if file_name:
             if path.exists(file_name):
@@ -135,8 +144,19 @@ class FieldPyculatorDialog(QMainWindow):
                     self.ui.grpGlobalExpression.setChecked(True)
                 else:
                     self.ui.grpGlobalExpression.setChecked(False)
+                self._code_from_file = file_name
+                self._is_dirty = False
+                self.update_btn_status()
             else:
                 QMessageBox.warning(self, self.tr('FieldPyculator warning'), self.tr('No such file: ') + file_name)
+
+    def action_save_handler(self):
+        if self._code_from_file and self._is_dirty:
+            content = CodeComposer.compose(self.ui.txtGlobalExp.toPlainText(), self.ui.txtFieldExp.toPlainText())
+            with open(self._code_from_file, 'w') as content_file:
+                content_file.write(content)
+            self._is_dirty = False
+            self.update_btn_status()
 
     def action_save_as_handler(self):
         file_name = QFileDialog.getSaveFileName(self, self.tr('Save code to file...'), filter=self._filter)
@@ -144,7 +164,16 @@ class FieldPyculatorDialog(QMainWindow):
             content = CodeComposer.compose(self.ui.txtGlobalExp.toPlainText(), self.ui.txtFieldExp.toPlainText())
             with open(file_name, 'w') as content_file:
                 content_file.write(content)
+                self._code_from_file = file_name
+                self._is_dirty = False
+                self.update_btn_status()
 
+    def update_btn_status(self):
+        self.ui.action_save.setEnabled(self._code_from_file is not None and self._is_dirty)
+
+    def set_dirty_flag(self):
+        self._is_dirty = True
+        self.update_btn_status()
 
     #--------------- Fields handlers ---------------------------
     def update_field_sample_values(self, new_item, old_item):
@@ -234,7 +263,7 @@ class FieldPyculatorDialog(QMainWindow):
         for field in field_map:
             field_name = unicode(field.name())
             replval = '__attr[\'' + field_name + '\']'
-            code = code.replace('<' +field_name+ '>', replval)
+            code = code.replace('<' + field_name + '>', replval)
 
         #replace all special vars
         code = code.replace('$id', '__id')

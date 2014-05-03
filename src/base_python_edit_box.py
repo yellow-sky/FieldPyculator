@@ -41,3 +41,6 @@ class BasePythonEditBox():
     #def wheelEvent(self, event):
         #self.emit(SIGNAL("wheelEvent(QWheelEvent)"), event)
         #raise NotImplementedError()
+
+    #def textChanged(self):
+        #pass
