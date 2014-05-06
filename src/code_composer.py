@@ -34,13 +34,13 @@ class CodeComposer():
 
     @staticmethod
     def compose(global_code, local_code):
-        content = '{h}{sep}{gs}{nl}{gc}{sep}{ls}{nl}{lc}'.format(h=CodeComposer._header,
-                                                         gs=CodeComposer._global_separator,
-                                                         gc=global_code,
-                                                         ls=CodeComposer._local_separator,
-                                                         lc=local_code,
-                                                         sep=CodeComposer._linesep*3,
-                                                         nl=CodeComposer._linesep)
+        content = u'{h}{sep}{gs}{nl}{gc}{sep}{ls}{nl}{lc}'.format(h=CodeComposer._header,
+                                                                  gs=CodeComposer._global_separator,
+                                                                  gc=global_code,
+                                                                  ls=CodeComposer._local_separator,
+                                                                  lc=local_code,
+                                                                  sep=CodeComposer._linesep*3,
+                                                                  nl=CodeComposer._linesep)
         return content
 
     @staticmethod
@@ -61,6 +61,6 @@ class CodeComposer():
             local_code = blocks[1]
 
         global_code = global_code.replace(CodeComposer._global_separator, '').strip()
-        local_code =  local_code.replace(CodeComposer._local_separator, '').strip()  # overhead
+        local_code = local_code.replace(CodeComposer._local_separator, '').strip()  # overhead
 
         return global_code, local_code

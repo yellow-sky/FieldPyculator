@@ -21,6 +21,7 @@
 import sys
 import datetime
 from os import path
+import codecs
 
 from PyQt4.QtGui import QMainWindow, QMessageBox, QListWidgetItem, QFileDialog
 from PyQt4.QtCore import QObject, SIGNAL, Qt, QSettings
@@ -135,7 +136,7 @@ class FieldPyculatorDialog(QMainWindow):
         file_name = QFileDialog.getOpenFileName(self, self.tr('Open file with code...'), filter=self._filter)
         if file_name:
             if path.exists(file_name):
-                with open(file_name) as content_file:
+                with codecs.open(file_name, 'r', encoding='utf-8') as content_file:
                     content = content_file.read()
                 glob_code, local_code = CodeComposer.decompose(content)
                 self.ui.txtGlobalExp.setText(glob_code)
@@ -153,7 +154,7 @@ class FieldPyculatorDialog(QMainWindow):
     def action_save_handler(self):
         if self._code_from_file and self._is_dirty:
             content = CodeComposer.compose(self.ui.txtGlobalExp.toPlainText(), self.ui.txtFieldExp.toPlainText())
-            with open(self._code_from_file, 'w') as content_file:
+            with codecs.open(self._code_from_file, 'w', encoding='utf-8') as content_file:
                 content_file.write(content)
             self._is_dirty = False
             self.update_btn_status()
@@ -162,7 +163,7 @@ class FieldPyculatorDialog(QMainWindow):
         file_name = QFileDialog.getSaveFileName(self, self.tr('Save code to file...'), filter=self._filter)
         if file_name:
             content = CodeComposer.compose(self.ui.txtGlobalExp.toPlainText(), self.ui.txtFieldExp.toPlainText())
-            with open(file_name, 'w') as content_file:
+            with codecs.open(file_name, 'w', encoding='utf-8') as content_file:
                 content_file.write(content)
                 self._code_from_file = file_name
                 self._is_dirty = False
